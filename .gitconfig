@@ -1,0 +1,10 @@
+[user]
+	name = Etienne Laurin
+	email = atnnn@rethinkdb.com
+[core]
+	editor = vim
+[color]
+	branch = auto
+	branch = auto
+	diff = auto
+	status = auto
