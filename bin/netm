@@ -1,0 +1,12 @@
+#!/bin/bash
+n=1
+t=2048
+a=`cat /sys/class/net/wlan0/statistics/rx_bytes`
+b=$a
+while sleep $n; do
+	c=`expr \( $a - $b \) / $n`
+	echo -n "$c	"
+	seq -s = 0 `expr $c / $t` | sed 's/[^=]//g;'
+	b=$a
+	a=`cat /sys/class/net/wlan0/statistics/rx_bytes`
+done
