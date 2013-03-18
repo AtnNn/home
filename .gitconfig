@@ -1,0 +1,6 @@
+[user]
+	name = AtnNn
+	email = etienne@atnnn.com
+[core]
+	autocrlf = false
+	filemode = false
