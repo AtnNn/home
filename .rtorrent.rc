@@ -1,0 +1,8 @@
+directory = /home/atnnn/download/
+session = /home/atnnn/download/rtorrent/
+port_range = 23000-24000
+upload_rate = 50
+#encryption = allow_incoming,try_outgoing
+schedule = ratio,60,60,"stop_on_ratio=120,1M,200"
+schedule = ip_tick,0,1800,ip=flash.atnnn.com
+schedule = low_diskspace,5,60,close_low_diskspace=50M

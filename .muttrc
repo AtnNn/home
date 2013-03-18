@@ -1,0 +1,160 @@
+alternates ".*@atnnn.com|sogled@gmail.com"
+set envelope_from
+set from="etienne@atnnn.com"
+set hidden_host
+set hostname="mail.atnnn.com"
+set realname="Etienne Laurin"
+set reverse_name
+set beep_new
+set pager_stop
+set sort=threads
+
+set mbox_type=Maildir
+set folder=/home/atnnn/Mail/
+set spoolfile=/home/atnnn/Mail/Inbox/
+set record=/home/atnnn/Mail/Sent/
+set postponed=/home/atnnn/Mail/Postponed
+set move=no
+
+set charset="UTF-8"
+set check_new=yes
+
+set pgp_autosign=yes
+set pgp_replyencrypt=yes
+set pgp_timeout=1800
+
+set pgp_decode_command="/usr/bin/gpg   %?p?--passphrase-fd 0? --no-verbose --quiet  --batch  --output - %f"
+
+# verify a pgp/mime signature
+set pgp_verify_command="/usr/bin/gpg   --no-verbose --quiet  --batch  --output - --verify %s %f"
+
+# decrypt a pgp/mime attachment
+set pgp_decrypt_command="/usr/bin/gpg   --passphrase-fd 0 --no-verbose --quiet  --batch  --output - %f"
+
+# create a pgp/mime signed attachment
+# set pgp_sign_command="/usr/bin/gpg-2comp --comment '' --no-verbose --batch  --output - --passphrase-fd 0 --armor --detach-sign --textmode %?a?-u %a? %f"
+set pgp_sign_command="/usr/bin/gpg    --no-verbose --batch --quiet   --output - --passphrase-fd 0 --armor --detach-sign --textmode %?a?-u %a? %f"
+
+# create a application/pgp signed (old-style) message
+# set pgp_clearsign_command="/usr/bin/gpg-2comp --comment ''  --no-verbose --batch  --output - --passphrase-fd 0 --armor --textmode --clearsign %?a?-u %a? %f"
+set pgp_clearsign_command="/usr/bin/gpg   --no-verbose --batch --quiet   --output - --passphrase-fd 0 --armor --textmode --clearsign %?a?-u %a? %f"
+
+# create a pgp/mime encrypted attachment
+# set pgp_encrypt_only_command="pgpewrap gpg-2comp  -v --batch  --output - --encrypt --textmode --armor --always-trust -- -r %r -- %f"
+set pgp_encrypt_only_command="pgpewrap /usr/bin/gpg    --batch  --quiet  --no-verbose --output - --encrypt --textmode --armor --always-trust -- -r %r -- %f"
+
+# create a pgp/mime encrypted and signed attachment
+# set pgp_encrypt_sign_command="pgpewrap gpg-2comp  --passphrase-fd 0 -v --batch  --output - --encrypt --sign %?a?-u %a? --armor --always-trust -- -r %r -- %f"
+set pgp_encrypt_sign_command="pgpewrap /usr/bin/gpg  --passphrase-fd 0  --batch --quiet  --no-verbose  --textmode --output - --encrypt --sign %?a?-u %a? --armor --always-trust -- -r %r -- %f"
+
+# import a key into the public key ring
+set pgp_import_command="/usr/bin/gpg  --no-verbose --import -v %f"
+
+# export a key from the public key ring
+set pgp_export_command="/usr/bin/gpg   --no-verbose --export --armor %r"
+
+# verify a key
+set pgp_verify_key_command="/usr/bin/gpg   --verbose --batch  --fingerprint --check-sigs %r"
+
+# read in the public key ring
+set pgp_list_pubring_command="/usr/bin/gpg   --no-verbose --batch --quiet   --with-colons --list-keys %r" 
+
+# read in the secret key ring
+set pgp_list_secring_command="/usr/bin/gpg   --no-verbose --batch --quiet   --with-colons --list-secret-keys %r" 
+
+# fetch keys
+# set pgp_getkeys_command="pkspxycwrap %r"
+set pgp_getkeys_command="gpg --no-verbose --recv-keys %r"
+
+# pattern for good signature - may need to be adapted to locale!
+
+# set pgp_good_sign="^gpg: Good signature from"
+
+# OK, here's a version which uses gnupg's message catalog:
+set pgp_good_sign="`gettext -d gnupg -s 'Good signature from "' | tr -d '"'`"
+
+#
+# Color definitions
+#
+
+#color normal white default
+color hdrdefault red default
+color quoted brightblue default
+color signature red default
+color indicator brightyellow red
+color error brightred default
+color status yellow blue
+color tree magenta default	# the thread tree in the index menu
+color tilde magenta default
+color message brightcyan default
+color markers brightcyan default
+color attachment brightmagenta default
+color search default green	# how to hilite search patterns in the pager
+
+color header brightred default ^(From|Subject):
+color body magenta default "(ftp|http|https)://[^ ]+"	# point out URLs
+color body magenta default [-a-z_0-9.]+@[-a-z_0-9.]+	# e-mail addresses
+color underline brightgreen default
+
+# attributes when using a mono terminal
+#mono header underline ^(From|Subject):
+mono quoted bold
+
+# use aspell
+set ispell="/usr/bin/aspell --mode=email check"
+
+#cache headers
+set header_cache="/home/atnnn/Mail/.header_cache/"
+
+#adress book (otak)
+set query_command="otak --query '%s'"
+macro pager A |'otak --add-email'
+macro index A |'otak --add-email'
+
+set implicit_autoview
+auto_view text/html
+set mailcap_path="~/.mailcap"
+set mailcap_sanitize=yes
+
+set include=yes
+
+set pager_index_lines=5
+set pager_context=3
+
+ignore *
+unignore from: date: subject: to: cc: reply-to: posted-to: newsgroups: list-id: delivered-to: organization:
+hdr_order From: To: Cc: Reply-To: Subject: Date:
+
+set user_agent
+set alias_file="~/.mutt/aliases"
+source ~/.mutt/aliases
+
+set markers=no
+
+set menu_scroll
+
+alternative_order text/enriched text/plain text/html 
+
+mailboxes `echo ~/Mail/*/`
+
+folder-hook . 'push <collapse-all>'
+
+macro index G "!fetchmail\n"
+
+set index_format="%Z %{%b %d} %-15.15L %?M?(%M) ?%s"
+
+unset help
+
+set narrow_tree
+
+set wait_key=no
+
+#set status_on_top
+
+bind index , next-unread-mailbox
+
+set menu_context=3
+
+macro index I "c=Inbox/\n"
+
+set sort_aux=last-date-received
