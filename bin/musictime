@@ -1,0 +1,19 @@
+#!/bin/bash
+
+t=5m
+
+saytime () {
+    espeak "it is `date +%H:%M`"
+}
+
+mpc volume 30
+mpc pause
+saytime
+mpc play
+
+while sleep $t; do
+    mpc volume 30
+    mpc pause
+    saytime
+    mpc play
+done
