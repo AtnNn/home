@@ -25,6 +25,7 @@ add_path ~/.gem/ruby/*/bin
 add_path ~/.python/bin
 add_path ~/.cabal/bin
 add_path ~/bin
+add_path ~/pub/emacs/bin
 
 SSH_AGENT_RC=~/.ssh-agent-env
 
