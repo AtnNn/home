@@ -14,7 +14,7 @@ eval `gpg-agent --daemon`
 (sleep 1; xsetroot -solid black ) &
 
 # Xmonad
-#export _JAVA_AWT_WM_NONREPARENTING=1
-#exec xmonad
+export _JAVA_AWT_WM_NONREPARENTING=1
+exec xmonad
 
-exec openbox
+#exec openbox
