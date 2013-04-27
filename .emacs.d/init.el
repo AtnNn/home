@@ -4,7 +4,7 @@
 (load custom-file)
 
 ;;; Emacs look
-(set-default-font "DejaVu Sans-10")
+(set-face-attribute 'default nil :font "DejaVu Sans-10")
 
 ;;; Change input defaults
 (global-set-key "\M-/" 'hippie-expand)

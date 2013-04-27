@@ -14,6 +14,7 @@ redshift -l 37:-122 &
 eval `ssh-agent`
 eval `gpg-agent --daemon`
 emacs --daemon
+unclutter &
 
 (sleep 1; xsetroot -solid black ) &
 
