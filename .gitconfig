@@ -18,3 +18,14 @@
 [user]
 	name = Etienne Laurin
 	email = etienne@atnnn.com
+[format]
+	pretty = oneline
+[log]
+	abbrevCommit = true
+	decorate = short
+[push]
+	default = upstream
+[rerere]
+	enabled = true
+[branch]
+	autosetupmerge = false
