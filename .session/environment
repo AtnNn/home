@@ -1,0 +1,6 @@
+#!/bin/bash
+
+EDITOR="emacsclient -a ''"
+
+alias edit="emacsclient -a '' -n -c"
+alias gl="git log --graph"
