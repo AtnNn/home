@@ -1,6 +1,7 @@
 #!/bin/bash
 
-EDITOR="emacsclient -a ''"
+export LANG=en_US.UTF-8
+export EDITOR="emacsclient -a ''"
 
-alias edit="emacsclient -a '' -n -c"
-alias gl="git log --graph"
+umask 077
+
