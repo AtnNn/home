@@ -22,7 +22,7 @@ alias mv='mv -i'
 alias cp='cp -i'
 alias rm='rm -i'
 alias less='less -RS'
-alias make='make --jobs=6 --load-average=4'
+alias make='make --jobs=6 --load-average=4.5'
 alias gl='git log --graph --oneline --decorate'
 
 ### Path

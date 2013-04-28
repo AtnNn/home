@@ -32,4 +32,5 @@
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(mode-line ((t (:background "gainsboro" :foreground "black" :inverse-video t))))
- '(mode-line-inactive ((t (:inherit mode-line :background "gray" :foreground "grey20" :box (:line-width -1 :color "grey75") :weight light)))))
+ '(mode-line-inactive ((t (:inherit mode-line :background "gray" :foreground "grey20" :box (:line-width -1 :color "grey75") :weight light))))
+ '(whitespace-line ((t (:foreground "tomato")))))

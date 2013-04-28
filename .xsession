@@ -3,6 +3,9 @@
 . ~/.session/environment
 
 export BROWSER=/usr/bin/firefox
+export GTK_IM_MODULE=ibus
+export XMODIFIERS=@im=ibus
+export QT_IM_MODULE=ibus
 
 # X configuration
 xsetroot -solid white
@@ -15,6 +18,7 @@ eval `ssh-agent`
 eval `gpg-agent --daemon`
 emacs --daemon &
 unclutter &
+ibus-daemon --daemonize --xim
 
 (sleep 1; xsetroot -solid black ) &
 
