@@ -1,14 +1,31 @@
+[core]
+  editor = vim
+[color]
+    ui = auto
+[color "branch"]
+  current = yellow reverse
+  local = yellow
+  remote = green
+[color "diff"]
+  meta = yellow bold
+  frag = magenta bold
+  old = red bold
+  new = green bold
+[color "status"]
+  added = yellow
+  changed = green
+  untracked = cyan
 [user]
 	name = Etienne Laurin
 	email = atnnn@rethinkdb.com
-[core]
-	editor = vim
-[color]
-	branch = auto
-	branch = auto
-	diff = auto
-	status = auto
-[rerere]
-	enabled = 1
+[format]
+	pretty = oneline
+[log]
+	abbrevCommit = true
+	decorate = short
 [push]
 	default = upstream
+[rerere]
+	enabled = true
+[branch]
+	autosetupmerge = false
