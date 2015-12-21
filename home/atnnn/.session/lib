@@ -1,0 +1,10 @@
+
+substr () {
+    [[ "$2" != "${2%$1*}" ]]
+}
+
+add_path () {
+    for dir in "$@"; do
+        [[ -d "$dir" ]] && ! substr ":$dir:" ":$PATH:" && PATH="$dir:$PATH"
+    done
+}

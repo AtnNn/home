@@ -1,0 +1,7 @@
+[core]
+	repositoryformatversion = 0
+	filemode = true
+	worktree = /
+[remote "origin"]
+	url = git@github.com:atnnn/home
+	fetch = +refs/heads/*:refs/remotes/origin/*

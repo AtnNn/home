@@ -1,0 +1,4 @@
+set gui=none
+set complete=bhtfs
+set showstatuslinks=2
+set editor="emacsclient -n"
