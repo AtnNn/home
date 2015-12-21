@@ -13,12 +13,16 @@ xrdb < ~/.Xresources
 setxkbmap -option ctrl:nocaps
 
 # background software
-redshift -l 37:-122 &
+redshift -l 35:-80 &
 eval `ssh-agent`
-eval `gpg-agent --daemon`
+# eval `gpg-agent --daemon`
 emacs --daemon &
 unclutter &
 ibus-daemon --daemonize --xim
+# copyq &
+
+# power saving
+# echo 50 > /sys/class/backlight/acpi_video0/brightness
 
 (sleep 1; xsetroot -solid black ) &
 

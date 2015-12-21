@@ -4,7 +4,10 @@
 (load custom-file)
 
 ;;; Emacs look
-(set-face-attribute 'default nil :font "DejaVu Sans-10")
+;(setq default-frame-alist
+;'((font-backend . "xft")
+;(font . "DejaVu Sans-10")))
+(setq-default scroll-bar-mode 0)
 
 ;;; Change input defaults
 (global-set-key "\M-/" 'hippie-expand)
@@ -21,11 +24,11 @@
 (setq c-basic-offset 4)
 
 ;;; Whitespace
-(require 'whitespace)
-(setq-default whitespace-style '(trailing lines-tail tabs space-before-tab face))
-(setq-default whitespace-action '(report-on-bogus))
-(setq-default whitespace-line-column 89)
-(global-whitespace-mode t)
+;;(require 'whitespace)
+;;(setq-default whitespace-style '(trailing tabs space-before-tab face))
+;;(setq-default whitespace-action '(report-on-bogus))
+;;(setq-default whitespace-line-column 89)
+;;(global-whitespace-mode t)
 
 ;;; Buffer names
 (require 'uniquify)
@@ -42,3 +45,15 @@
              '("marmalade" . "http://marmalade-repo.org/packages/")
              '("melpa" . "http://melpa.milkbox.net/packages/"))
 (package-initialize)
+
+;; (load-file (let ((coding-system-for-read 'utf-8))
+;;                 (shell-command-to-string "agda-mode locate")))
+
+(add-to-list 'load-path "~/.emacs.d/idris-mode")
+(load "idris-mode")
+(setenv "PATH" (concat "/home/atnnn/.cabal/bin:" (getenv "PATH")))
+(setq exec-path (append exec-path '("/home/atnnn/.cabal/bin")))
+
+(let ((quail-current-package (assoc "TeX" quail-package-alist)))
+  (quail-define-rules ((append . t))
+		      ("\\::" "∷")))

@@ -1,0 +1,8 @@
+#!/bin/bash
+
+lsof -X | awk '/Flash/ {print "/proc/" $2 "/fd/" $4}' | sed 's/.$//' |
+  if [ "$1" = -p ]; then
+    cat
+  else
+    xargs mplayer "$@"
+  fi
