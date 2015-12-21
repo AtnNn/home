@@ -5,3 +5,6 @@
 [remote "origin"]
 	url = git@github.com:atnnn/home
 	fetch = +refs/heads/*:refs/remotes/origin/*
+[branch "treetop"]
+	remote = origin
+	merge = refs/heads/treetop
