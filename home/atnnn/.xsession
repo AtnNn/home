@@ -13,7 +13,8 @@ xrdb < ~/.Xresources
 setxkbmap -option ctrl:nocaps
 
 # background software
-redshift -l 35:-80 &
+redshift -m randr:screen=0 -l 35:-80 & # Charlotte
+# redshift -l 37:-122 & # San Francisco
 eval `ssh-agent`
 # eval `gpg-agent --daemon`
 emacs --daemon &

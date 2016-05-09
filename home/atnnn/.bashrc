@@ -29,3 +29,9 @@ add_path ~/bin
 add_path ~/lib/ghc-7.8.2/bin
 add_path ~/.cabal/bin
 
+
+# @begin(26550862)@ - Do not edit these lines - added automatically!
+if [ -f /home/atnnn/code/ciao/core/etc/DOTprofile ] ; then
+  . /home/atnnn/code/ciao/core/etc/DOTprofile
+fi
+# @end(26550862)@ - End of automatically added lines.
