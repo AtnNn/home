@@ -1,4 +1,9 @@
-set gui=none
+"3.13.1 (created: 2016/05/04 01:34:00)
+
 set complete=bhtfs
-set showstatuslinks=2
-set editor="emacsclient -n"
+set "editor=emacsclient -n"
+set noscrollbars
+set showstatuslinks=3
+source! /home/atnnn/.vimperatorrc.local
+
+" vim: set ft=vimperator:
