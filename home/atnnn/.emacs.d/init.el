@@ -3,10 +3,11 @@
 (setq custom-file "~/.emacs.d/custom.el")
 (load custom-file)
 
-;;; Emacs look
-;(setq default-frame-alist
-;'((font-backend . "xft")
-;(font . "DejaVu Sans-10")))
+;; Emacs look
+(setq default-frame-alist
+      '((font-backend . "xft")
+        (font . "DejaVu Sans-10")))
+
 (setq-default scroll-bar-mode 0)
 
 ;;; Change input defaults

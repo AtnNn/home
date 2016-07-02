@@ -11,6 +11,7 @@ app-arch/rpm
 app-cdr/iat
 app-crypt/keybase
 app-dicts/aspell-ru
+app-doc/doxygen
 app-editors/emacs
 app-editors/vim
 app-emacs/icicles
@@ -48,6 +49,7 @@ app-text/docbook-xml-simple-dtd
 app-text/docbook-xsl-ns-stylesheets
 app-text/evince
 app-text/fbreader
+app-text/flpsed
 app-text/goldendict
 app-text/pandoc
 app-text/texlive
@@ -67,6 +69,7 @@ dev-haskell/extensible-exceptions
 dev-haskell/parsec
 dev-haskell/utf8-string
 dev-java/java-config
+dev-java/oracle-jdk-bin
 dev-java/oracle-jre-bin:1.8
 dev-lang/bff
 dev-lang/closure-compiler-bin
@@ -78,6 +81,7 @@ dev-lang/php
 dev-lang/python
 dev-lang/python-exec
 dev-lang/ruby
+dev-lang/scala
 dev-lang/swi-prolog
 dev-libs/boost
 dev-libs/gobject-introspection
@@ -85,6 +89,7 @@ dev-libs/jemalloc
 dev-libs/protobuf
 dev-libs/protobuf-c
 dev-lua/luarocks
+dev-perl/libwww-perl
 dev-python/pep8
 dev-python/pip
 dev-python/pip::gentoo
@@ -104,6 +109,7 @@ dev-util/bsdiff
 dev-util/ccache
 dev-util/debootstrap
 dev-util/google-perftools
+dev-util/patchutils
 dev-util/pkgconf
 dev-util/schroot
 dev-util/strace
@@ -162,6 +168,7 @@ media-video/mediainfo
 media-video/mplayer
 media-video/rtmpdump
 media-video/vlc
+net-analyzer/iftop
 net-analyzer/mtr
 net-analyzer/netcat
 net-analyzer/nmap

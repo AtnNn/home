@@ -11,6 +11,7 @@ export QT_IM_MODULE=ibus
 xsetroot -solid white
 xrdb < ~/.Xresources
 setxkbmap -option ctrl:nocaps
+fc-list | cut -f 1 -d : | grep -o '.*/' | sort -u | xargs -n 1 xset +fp
 
 # background software
 redshift -m randr:screen=0 -l 35:-80 & # Charlotte

@@ -4,6 +4,7 @@ set complete=bhtfs
 set "editor=emacsclient -n"
 set noscrollbars
 set showstatuslinks=3
+set statuslinevisibility=hidden
 source! /home/atnnn/.vimperatorrc.local
 
 " vim: set ft=vimperator:
