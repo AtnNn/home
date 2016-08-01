@@ -5,8 +5,7 @@
 
 ;; Emacs look
 (setq default-frame-alist
-      '((font-backend . "xft")
-        (font . "DejaVu Sans-10")))
+      '((font . "DejaVu Sans-10")))
 
 (setq-default scroll-bar-mode 0)
 
@@ -25,11 +24,11 @@
 (setq c-basic-offset 4)
 
 ;;; Whitespace
-;;(require 'whitespace)
-;;(setq-default whitespace-style '(trailing tabs space-before-tab face))
-;;(setq-default whitespace-action '(report-on-bogus))
+(require 'whitespace)
+(setq-default whitespace-style '(trailing tabs space-before-tab face))
+(setq-default whitespace-action '(report-on-bogus))
 ;;(setq-default whitespace-line-column 89)
-;;(global-whitespace-mode t)
+(global-whitespace-mode t)
 
 ;;; Buffer names
 (require 'uniquify)
@@ -55,6 +54,6 @@
 (setenv "PATH" (concat "/home/atnnn/.cabal/bin:" (getenv "PATH")))
 (setq exec-path (append exec-path '("/home/atnnn/.cabal/bin")))
 
-(let ((quail-current-package (assoc "TeX" quail-package-alist)))
-  (quail-define-rules ((append . t))
-		      ("\\::" "∷")))
+;; Paredit
+(add-to-list 'paredit-space-for-delimiter-predicates
+             (lambda (_ _) nil))
