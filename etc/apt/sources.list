@@ -9,4 +9,4 @@ deb-src http://security.debian.org/ stretch/updates main contrib non-free
 deb http://mirrors.linode.com/debian/ stretch-updates main contrib non-free
 deb-src http://mirrors.linode.com/debian/ stretch-updates main contrib non-free
 
-deb http://http.debian.net/debian stretch-backports main
+#deb http://http.debian.net/debian stretch-backports main
