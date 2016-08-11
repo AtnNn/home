@@ -1,0 +1,12 @@
+homedisabled () {
+  xinput $1 "TPPS/2 IBM TrackPoint"
+  xinput $1 "AT Translated Set 2 keyboard"
+}
+
+xrandr --output VGA1 --auto --above LVDS1 --rotate left --primary
+homedisabled disable
+
+leavehome () {
+  xrandr --output VGA1 --off
+  homedisabled enable
+}
