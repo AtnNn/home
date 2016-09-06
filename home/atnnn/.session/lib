@@ -1,0 +1,10 @@
+
+substr () {
+  [[ "$2" != "${2%$1*}" ]]
+}
+
+add_path () {
+  local dir
+  dir=$(readlink -f "$1")
+  [[ -d "$dir" ]] && ! substr ":$dir:" ":$PATH:" && PATH="$dir:$PATH"
+}

@@ -1,46 +1,45 @@
-# Edit this configuration file to define what should be installed on
-# your system.  Help is available in the configuration.nix(5) man page
-# and in the NixOS manual (accessible by running ‘nixos-help’).
-
 { config, pkgs, ... }:
 
+let secrets = import ./secrets.nix; in
 {
   imports =
-    [ # Include the results of the hardware scan.
+    [
       ./hardware-configuration.nix
     ];
 
-  # Use the GRUB 2 boot loader.
-  boot.loader.grub.enable = true;
-  boot.loader.grub.version = 2;
-  boot.loader.grub.extraEntries = ''
-    menuentry "gentoo" {
-      set root='(hd0,msdos1)'
-      linux /boot/vmlinuz-4.3.3-gentoo root=/dev/sda1 acpi_osi="!Windows 2012" pcie_aspm=force acpi_backlight=vendor
-    }
-  '';
-  # Define on which hard drive you want to install Grub.
-  boot.loader.grub.device = "/dev/sda";
-
-  networking.hostName = "queen"; # Define your hostname.
-  networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
-  networking.wireless.networks = {
-    Igtol.psk = "quebeccanada";
+  boot.loader.grub = {
+    enable = true;
+    version = 2;
+    extraEntries = ''
+      menuentry "gentoo" {
+        set root='(hd0,msdos1)'
+        linux /boot/vmlinuz-4.3.3-gentoo root=/dev/sda1 acpi_osi="!Windows 2012" pcie_aspm=force acpi_backlight=vendor
+      }
+    '';
+    device = "/dev/sda";
   };
-  # networking.supplicant.wlp3s0 = {};
 
-  # Select internationalisation properties.
+  networking = {
+    hostName = "queen";
+    wireless.enable = true;
+    wireless.networks = {
+      Igtol.psk = "quebeccanada";
+    };
+    nameservers = [
+      "8.8.8.8" "8.8.4.4"
+    ];
+  };
+
   i18n = {
     consoleFont = "Lat2-Terminus16";
     consoleKeyMap = "us";
     defaultLocale = "en_US.UTF-8";
+    inputMethod.enabled = "ibus";
+    inputMethod.ibus.engines = [ pkgs.ibus-engines.m17n ];
   };
 
-  # Set your time zone.
   time.timeZone = "America/New_York";
 
-  # List packages installed in system profile. To search by name, run:
-  # $ nix-env -qaP | grep wget
   environment.systemPackages = with pkgs; [
     wget
     firefox
@@ -56,17 +55,61 @@
     sudo
     wget
     which
+    ghc
+    python3
+    php70
+    nodejs
+    coreutils
+    ffmpeg
+    vim
+    gimp
+    libreoffice
+    skype
+    utillinux
+    zathura
+    p7zip
+    imagemagickBig
+    acpi
+    chromium
+    zip unzip
+    irssi
+    nmap
+    # texLive
+    gcc
+    llvm
+    screen
+    pavucontrol
+    gnupg
+    w3m
+    nixops
+    powertop
+    gdb
+    gnumake
+    graphviz
+    man
+    rtorrent
+    ruby
+    vlc
+    glxinfo
+    xorg.xkill
+    wine
   ];
 
-  # List services that you want to enable:
+  environment.variables = {
+    EDITOR = "vim";
+  };
 
-  # Enable the OpenSSH daemon.
-  services.openssh.enable = true;
+  services = {
+    openssh.enable = true;
+    printing.enable = true;
+    locate.enable = true;
+    redshift = {
+      enable = true;
+      latitude = "35";
+      longitude = "-80";
+    };
+  };
 
-  # Enable CUPS to print documents.
-  services.printing.enable = true;
-
-  # Enable the X11 windowing system.
   services.xserver = {
     enable = true;
     layout = "us";
@@ -75,30 +118,41 @@
     windowManager.xmonad.enableContribAndExtras = true;
     windowManager.openbox.enable = true;
     synaptics.enable = true;
-    synaptics.horizTwoFingerScroll = true;
+    synaptics.twoFingerScroll = true;
+    synaptics.horizontalScroll = true;
   };
 
-  # Define a user account. Don't forget to set a password with ‘passwd’.
-  users.extraUsers.atnnn = {
+  users.users.root.hashedPassword = secrets.passwordHashes.root;
+  users.users.atnnn = {
     isNormalUser = true;
     uid = 1000;
-    extraGroups = [ "wheel" "docker" "audio" ];
+    group = "atnnn";
+    extraGroups = [ "wheel" "docker" "audio" "vboxusers" ];
     createHome = true;
+    hashedPassword = secrets.passwordHashes.atnnn;
   };
+  users.groups.atnnn.gid = 1000;
+  users.mutableUsers = false;
 
-  # The NixOS release to be compatible with for stateful data such as databases.
   system.stateVersion = "@nixosRelease@";
 
   programs.bash.enableCompletion = true;
   
   virtualisation.docker.enable = true;
+  virtualisation.virtualbox.host.enable = true;
 
   hardware.enableAllFirmware = true;
+  hardware.bluetooth.enable = true;
+  hardware.pulseaudio.enable = true;
 
   nixpkgs.config = {
     allowUnfree = true;
+    firefox.enableAdobeFlash = true;
+    
   };
 
-  i18n.inputMethod.enabled = "ibus";
-  i18n.inputMethod.ibus.engines = [ pkgs.ibus-engines.m17n ];
+  fonts = {
+    enableFontDir = true;
+    fonts = with pkgs; [ dejavu_fonts freefont_ttf unifont unifont_upper ];
+  };
 }
