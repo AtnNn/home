@@ -22,9 +22,7 @@ let secrets = import ./secrets.nix; in
   networking = {
     hostName = "queen";
     wireless.enable = true;
-    wireless.networks = {
-      Igtol.psk = "quebeccanada";
-    };
+    wireless.networks = secrets.wifi // { };
     nameservers = [
       "8.8.8.8" "8.8.4.4"
     ];
@@ -93,6 +91,8 @@ let secrets = import ./secrets.nix; in
     glxinfo
     xorg.xkill
     wine
+    man-pages
+    stdmanpages
   ];
 
   environment.variables = {

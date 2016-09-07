@@ -8,7 +8,7 @@ fi
 ### Bash settings
 HISTCONTROL=ignoreboth
 HISTFILESIZE=1000000
-shopt -s globstar histappend cmdhist nocaseglob checkhash failglob
+shopt -s globstar histappend cmdhist nocaseglob checkhash
 PROMPT_COMMAND='history -a'
 
 ### Aliases

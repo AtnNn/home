@@ -2,3 +2,4 @@ XTerm*metaSendsEscape: true
 XTerm*cursorColor: orange
 XTerm*reverseVideo: true
 XTerm*faceName: dejavu sans mono
+XTerm*scaleHeight: 1.01
