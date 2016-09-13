@@ -1,6 +1,7 @@
 import XMonad
 import Data.Monoid
 import System.Exit
+import XMonad.Layout.NoBorders (noBorders, smartBorders)
 
 import qualified XMonad.StackSet as W
 import qualified Data.Map as M
@@ -65,7 +66,7 @@ myMouseBindings (XConfig {XMonad.modMask = modm}) = M.fromList $
                           >> windows W.shiftMaster))
     ]
 
-myLayout = Full ||| tiled ||| Mirror tiled
+myLayout = noBorders Full ||| smartBorders tiled ||| smartBorders (Mirror tiled)
   where
      tiled   = Tall nmaster delta ratio
      nmaster = 1

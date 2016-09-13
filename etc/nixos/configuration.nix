@@ -56,7 +56,6 @@ let secrets = import ./secrets.nix; in
     ghc
     python3
     php70
-    nodejs
     coreutils
     ffmpeg
     vim
@@ -102,7 +101,10 @@ let secrets = import ./secrets.nix; in
   services = {
     openssh.enable = true;
     printing.enable = true;
-    locate.enable = true;
+    locate = {
+      enable = true;
+      includeStore = true;
+    };
     redshift = {
       enable = true;
       latitude = "35";
@@ -148,7 +150,8 @@ let secrets = import ./secrets.nix; in
   nixpkgs.config = {
     allowUnfree = true;
     firefox.enableAdobeFlash = true;
-    
+    chromium.enablePepperFlash = true;
+    chromium.enableWideVine = true;
   };
 
   fonts = {
