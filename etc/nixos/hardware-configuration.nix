@@ -11,12 +11,12 @@
   boot.extraModulePackages = [ ];
 
   fileSystems."/" =
-    { device = "/dev/sda5";
+    { device = "/dev/sda2";
       fsType = "ext4";
     };
 
   swapDevices =
-    [ { device = "/dev/sda2"; }
+    [ { device = "/dev/sda3"; }
     ];
 
   nix.maxJobs = lib.mkDefault 4;

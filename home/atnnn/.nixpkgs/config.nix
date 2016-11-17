@@ -1,6 +1,9 @@
 {
   allowUnfree = true;
+  allowBroken = true;
   packageOverrides = pkgs: rec {
-    # foo = pkgs.foo.override { ... };
+    phpstorm-oraclejdk = pkgs.idea.phpstorm.override {
+        jdk = pkgs.oraclejdk8psu;
+    };
   };
 }

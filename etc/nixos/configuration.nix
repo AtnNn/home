@@ -11,9 +11,8 @@ let secrets = import ./secrets.nix; in
     enable = true;
     version = 2;
     extraEntries = ''
-      menuentry "gentoo" {
-        set root='(hd0,msdos1)'
-        linux /boot/vmlinuz-4.3.3-gentoo root=/dev/sda1 acpi_osi="!Windows 2012" pcie_aspm=force acpi_backlight=vendor
+      menuentry "Windows 10" {
+        chainloader (hd0,msdos1)+1
       }
     '';
     device = "/dev/sda";
@@ -67,7 +66,7 @@ let secrets = import ./secrets.nix; in
     p7zip
     imagemagickBig
     acpi
-    chromium
+    # chromium # url 404
     zip unzip
     irssi
     nmap
@@ -152,6 +151,11 @@ let secrets = import ./secrets.nix; in
     firefox.enableAdobeFlash = true;
     chromium.enablePepperFlash = true;
     chromium.enableWideVine = true;
+  };
+
+  nix = {
+    useSandbox = true;
+    trustedBinaryCaches = [ "http://hydra.nixos.org/" ];
   };
 
   fonts = {
