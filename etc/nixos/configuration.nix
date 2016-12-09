@@ -22,6 +22,7 @@ let secrets = import ./secrets.nix; in
     hostName = "queen";
     wireless.enable = true;
     wireless.networks = secrets.wifi // { };
+    wireless.userControlled.enable = true;
     nameservers = [
       "8.8.8.8" "8.8.4.4"
     ];
@@ -144,7 +145,11 @@ let secrets = import ./secrets.nix; in
 
   hardware.enableAllFirmware = true;
   hardware.bluetooth.enable = true;
-  hardware.pulseaudio.enable = true;
+  hardware.pulseaudio = {
+    enable = true;
+    package = pkgs.pulseaudioFull;
+  };
+  security.rtkit.enable = true;
 
   nixpkgs.config = {
     allowUnfree = true;
@@ -159,6 +164,7 @@ let secrets = import ./secrets.nix; in
   };
 
   fonts = {
+    enableDefaultFonts = true;
     enableFontDir = true;
     fonts = with pkgs; [ dejavu_fonts freefont_ttf unifont unifont_upper ];
   };
