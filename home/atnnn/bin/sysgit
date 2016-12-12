@@ -1,0 +1,5 @@
+#!/bin/sh
+
+export GIT_DIR=~/.system.git
+
+exec git "$@"
