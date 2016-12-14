@@ -17,7 +17,7 @@ let hydraSrc = builtins.fetchTarball "https://github.com/NixOS/hydra/archive/de5
 
   networking.firewall = {
     enable = true;
-    allowedTCPPorts = [ 22 3000 ];
+    allowedTCPPorts = [ 22 3000 443 ];
     allowPing = true;
   };
 
@@ -35,6 +35,10 @@ let hydraSrc = builtins.fetchTarball "https://github.com/NixOS/hydra/archive/de5
 
   services.openssh.enable = true;
   services.openssh.permitRootLogin = "yes";
+  services.openssh.listenAddresses = [
+    { addr = "0.0.0.0"; port = 22; }
+    { addr = "0.0.0.0"; port = 443; }
+  ];
 
   users.extraUsers.atnnn = {
     isNormalUser = true;
@@ -54,16 +58,8 @@ let hydraSrc = builtins.fetchTarball "https://github.com/NixOS/hydra/archive/de5
   nix = {
     useSandbox = "relaxed";
     binaryCaches = [ "http://hydra.nixos.org/" "https://cache.nixos.org/" ];
-    buildCores = 0;
-
-    # needed for Hydra (https://github.com/NixOS/hydra/issues/430)
-    # buildMachines = [
-    #   {
-    #     hostName = "localhost";
-    #     maxJobs = "10";
-    #     system = "x86_64-linux";
-    #   }
-    # ];
+    buildCores = 12;
+    maxJobs = 4;
   };
 
   # nix.gc.automatic = true;
@@ -73,6 +69,7 @@ let hydraSrc = builtins.fetchTarball "https://github.com/NixOS/hydra/archive/de5
     hydraURL = "http://thanos.atnnn.com:3000";
     notificationSender = "etienne@atnnn.com";
     buildMachinesFiles = [];
+    logo = ./hydra-logo.jpg;
   };
 
   services.postfix = {
