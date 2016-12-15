@@ -17,7 +17,7 @@ let hydraSrc = builtins.fetchTarball "https://github.com/NixOS/hydra/archive/de5
 
   networking.firewall = {
     enable = true;
-    allowedTCPPorts = [ 22 3000 443 ];
+    allowedTCPPorts = [ 22 3000 443 80 3443 ];
     allowPing = true;
   };
 
@@ -59,7 +59,15 @@ let hydraSrc = builtins.fetchTarball "https://github.com/NixOS/hydra/archive/de5
     useSandbox = "relaxed";
     binaryCaches = [ "http://hydra.nixos.org/" "https://cache.nixos.org/" ];
     buildCores = 12;
-    maxJobs = 4;
+    maxJobs = 12;
+
+    distributedBuilds = true;
+    buildMachines = [
+      { hostName = "localhost";
+        maxJobs = 2;
+        system = "x86_64-linux";
+        supportedFeatures = [ "kvm" ]; }
+    ];
   };
 
   # nix.gc.automatic = true;
@@ -68,11 +76,42 @@ let hydraSrc = builtins.fetchTarball "https://github.com/NixOS/hydra/archive/de5
     enable = true;
     hydraURL = "http://thanos.atnnn.com:3000";
     notificationSender = "etienne@atnnn.com";
-    buildMachinesFiles = [];
+    # buildMachinesFiles = [];
     logo = ./hydra-logo.jpg;
   };
+  systemd.services.hydra-evaluator.serviceConfig.Nice = -15;
 
   services.postfix = {
     enable = true;
+  };
+
+  services.nginx = {
+    enable = true;
+    recommendedOptimisation = true;
+    recommendedTlsSettings = true;
+    recommendedGzipSettings = true;
+    recommendedProxySettings = true;
+    virtualHosts."thanos.atnnn.com" = {
+      port = 3443;
+      enableSSL = true;
+      extraConfig = "listen 80; listen [::]:80;";
+      enableACME = true;
+      locations."~ /download/" = {
+        proxyPass = "http://localhost:3000";
+      };
+      locations."/" = {
+        extraConfig = ''
+          sub_filter "https://thanos.atnnn.com/" "https://thanos.atnnn.com:3443/";
+          sub_filter_once off;
+          sub_filter_types "text/html";
+        '';
+        proxyPass = "http://localhost:3000";
+      };
+    };
+  };
+
+  security.acme.certs."thanos.atnnn.com" = {
+    postRun = "systemctl reload nginx.service";
+    email = "etienne@atnnn.com";
   };
 }
