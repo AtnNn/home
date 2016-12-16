@@ -64,7 +64,7 @@ let hydraSrc = builtins.fetchTarball "https://github.com/NixOS/hydra/archive/de5
     distributedBuilds = true;
     buildMachines = [
       { hostName = "localhost";
-        maxJobs = 2;
+        maxJobs = 3;
         system = "x86_64-linux";
         supportedFeatures = [ "kvm" ]; }
     ];
@@ -74,7 +74,7 @@ let hydraSrc = builtins.fetchTarball "https://github.com/NixOS/hydra/archive/de5
 
   services.hydra-dev = {
     enable = true;
-    hydraURL = "http://thanos.atnnn.com:3000";
+    hydraURL = "https://thanos.atnnn.com:3443";
     notificationSender = "etienne@atnnn.com";
     # buildMachinesFiles = [];
     logo = ./hydra-logo.jpg;
