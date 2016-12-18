@@ -17,7 +17,7 @@ let hydraSrc = builtins.fetchTarball "https://github.com/NixOS/hydra/archive/de5
 
   networking.firewall = {
     enable = true;
-    allowedTCPPorts = [ 22 3000 443 80 3443 ];
+    allowedTCPPorts = [ 22 443 80 ];
     allowPing = true;
   };
 
@@ -37,7 +37,7 @@ let hydraSrc = builtins.fetchTarball "https://github.com/NixOS/hydra/archive/de5
   services.openssh.permitRootLogin = "yes";
   services.openssh.listenAddresses = [
     { addr = "0.0.0.0"; port = 22; }
-    { addr = "0.0.0.0"; port = 443; }
+    # { addr = "0.0.0.0"; port = 443; }
   ];
 
   users.extraUsers.atnnn = {
@@ -65,7 +65,7 @@ let hydraSrc = builtins.fetchTarball "https://github.com/NixOS/hydra/archive/de5
     buildMachines = [
       { hostName = "localhost";
         maxJobs = 3;
-        system = "x86_64-linux";
+        system = "x86_64-linux,i686-linux";
         supportedFeatures = [ "kvm" ]; }
     ];
   };
@@ -74,7 +74,7 @@ let hydraSrc = builtins.fetchTarball "https://github.com/NixOS/hydra/archive/de5
 
   services.hydra-dev = {
     enable = true;
-    hydraURL = "https://thanos.atnnn.com:3443";
+    hydraURL = "https://thanos.atnnn.com";
     notificationSender = "etienne@atnnn.com";
     # buildMachinesFiles = [];
     logo = ./hydra-logo.jpg;
@@ -92,19 +92,11 @@ let hydraSrc = builtins.fetchTarball "https://github.com/NixOS/hydra/archive/de5
     recommendedGzipSettings = true;
     recommendedProxySettings = true;
     virtualHosts."thanos.atnnn.com" = {
-      port = 3443;
+      port = 443;
       enableSSL = true;
       extraConfig = "listen 80; listen [::]:80;";
       enableACME = true;
-      locations."~ /download/" = {
-        proxyPass = "http://localhost:3000";
-      };
       locations."/" = {
-        extraConfig = ''
-          sub_filter "https://thanos.atnnn.com/" "https://thanos.atnnn.com:3443/";
-          sub_filter_once off;
-          sub_filter_types "text/html";
-        '';
         proxyPass = "http://localhost:3000";
       };
     };
