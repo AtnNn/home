@@ -45,6 +45,9 @@ let hydraSrc = builtins.fetchTarball "https://github.com/NixOS/hydra/archive/de5
     uid = 1000;
     extraGroups = [ "wheel" "docker" "audio" "vboxusers" ];
   };
+  users.extraUsers.nix = {
+    isNormalUser = true;
+  };
 
   system.stateVersion = "16.09";
 
@@ -57,13 +60,16 @@ let hydraSrc = builtins.fetchTarball "https://github.com/NixOS/hydra/archive/de5
 
   nix = {
     useSandbox = "relaxed";
+    sandboxPaths = [ "/home/nix/ccache" ];
     binaryCaches = [ "http://hydra.nixos.org/" "https://cache.nixos.org/" ];
     buildCores = 12;
-    maxJobs = 12;
+    maxJobs = 3;
 
-    distributedBuilds = true;
+    distributedBuilds = false; # TODO
     buildMachines = [
       { hostName = "localhost";
+        sshUser = "root";
+        sshKey = "/root/.ssh/id_rsa";
         maxJobs = 3;
         system = "x86_64-linux,i686-linux";
         supportedFeatures = [ "kvm" ]; }
@@ -76,7 +82,7 @@ let hydraSrc = builtins.fetchTarball "https://github.com/NixOS/hydra/archive/de5
     enable = true;
     hydraURL = "https://thanos.atnnn.com";
     notificationSender = "etienne@atnnn.com";
-    # buildMachinesFiles = [];
+    buildMachinesFiles = [];
     logo = ./hydra-logo.jpg;
   };
   systemd.services.hydra-evaluator.serviceConfig.Nice = -15;
@@ -106,4 +112,8 @@ let hydraSrc = builtins.fetchTarball "https://github.com/NixOS/hydra/archive/de5
     postRun = "systemctl reload nginx.service";
     email = "etienne@atnnn.com";
   };
+
+  programs.ssh.extraConfig = ''
+    StrictHostKeyChecking no
+  '';
 }
