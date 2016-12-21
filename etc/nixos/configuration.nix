@@ -65,11 +65,9 @@ let hydraSrc = builtins.fetchTarball "https://github.com/NixOS/hydra/archive/de5
     buildCores = 12;
     maxJobs = 3;
 
-    distributedBuilds = false; # TODO
+    distributedBuilds = true; # TODO
     buildMachines = [
       { hostName = "localhost";
-        sshUser = "root";
-        sshKey = "/root/.ssh/id_rsa";
         maxJobs = 3;
         system = "x86_64-linux,i686-linux";
         supportedFeatures = [ "kvm" ]; }
@@ -82,7 +80,7 @@ let hydraSrc = builtins.fetchTarball "https://github.com/NixOS/hydra/archive/de5
     enable = true;
     hydraURL = "https://thanos.atnnn.com";
     notificationSender = "etienne@atnnn.com";
-    buildMachinesFiles = [];
+    # buildMachinesFiles = []; # TODO
     logo = ./hydra-logo.jpg;
   };
   systemd.services.hydra-evaluator.serviceConfig.Nice = -15;
