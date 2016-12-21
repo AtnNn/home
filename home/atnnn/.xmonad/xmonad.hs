@@ -2,6 +2,8 @@ import XMonad
 import Data.Monoid
 import System.Exit
 import XMonad.Layout.NoBorders (noBorders, smartBorders)
+import XMonad.Layout.LayoutScreens
+import XMonad.Layout.TwoPane
 
 import qualified XMonad.StackSet as W
 import qualified Data.Map as M
@@ -25,7 +27,7 @@ myKeys conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
     , ((modm, xK_p), spawn "dmenu_run")
     , ((modm .|. shiftMask, xK_c), kill)
     , ((modm, xK_space ), sendMessage NextLayout)
-    , ((modm .|. shiftMask, xK_space ), setLayout $ XMonad.layoutHook conf)
+    -- , ((modm .|. shiftMask, xK_space ), setLayout $ XMonad.layoutHook conf)
     , ((modm, xK_n), refresh)
 
     , ((modm, xK_Tab), windows W.focusDown)
@@ -44,6 +46,8 @@ myKeys conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
 
     , ((modm .|. shiftMask, xK_q), io (exitWith ExitSuccess))
     , ((modm, xK_q), spawn "xmonad --recompile; xmonad --restart")
+    , ((modm .|. shiftMask, xK_space), layoutSplitScreen 2 (Mirror (TwoPane 0.5 0.5)))
+    , ((modm .|. controlMask .|. shiftMask, xK_space), rescreen)
     ]
     ++
     [((m .|. modm, k), windows $ f i)

@@ -67,7 +67,7 @@ let secrets = import ./secrets.nix; in
     p7zip
     imagemagickBig
     acpi
-    # chromium # url 404
+    # chromium
     zip unzip
     irssi
     nmap
@@ -92,6 +92,9 @@ let secrets = import ./secrets.nix; in
     wine
     man-pages
     stdmanpages
+    clang
+    curl
+    nox
   ];
 
   environment.variables = {
@@ -116,9 +119,15 @@ let secrets = import ./secrets.nix; in
     enable = true;
     layout = "us";
     xkbOptions = "ctrl:nocaps";
+    desktopManager.xterm.enable = true;
     windowManager.xmonad.enable = true;
     windowManager.xmonad.enableContribAndExtras = true;
     windowManager.openbox.enable = true;
+
+    # displayManager.sessionCommands = ''
+    #   $(pkgs.ibus)/bin/ibus-daemon &;
+    # '';
+
     synaptics.enable = true;
     synaptics.twoFingerScroll = true;
     synaptics.horizontalScroll = true;
