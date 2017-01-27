@@ -17,7 +17,7 @@ let hydraSrc = builtins.fetchTarball "https://github.com/NixOS/hydra/archive/de5
 
   networking.firewall = {
     enable = true;
-    allowedTCPPorts = [ 22 443 80 ];
+    allowedTCPPorts = [ 22 443 80 4000 ];
     allowPing = true;
   };
 
@@ -65,13 +65,13 @@ let hydraSrc = builtins.fetchTarball "https://github.com/NixOS/hydra/archive/de5
     buildCores = 12;
     maxJobs = 3;
 
-    distributedBuilds = true; # TODO
-    buildMachines = [
-      { hostName = "localhost";
-        maxJobs = 3;
-        system = "x86_64-linux,i686-linux";
-        supportedFeatures = [ "kvm" ]; }
-    ];
+    # distributedBuilds = true; # TODO
+    # buildMachines = [
+    #   { hostName = "localhost";
+    #     maxJobs = 3;
+    #     system = "x86_64-linux,i686-LINUX";
+    #     supportedFeatures = [ "kvm" ]; }
+    # ];
   };
 
   # nix.gc.automatic = true;
@@ -80,7 +80,11 @@ let hydraSrc = builtins.fetchTarball "https://github.com/NixOS/hydra/archive/de5
     enable = true;
     hydraURL = "https://thanos.atnnn.com";
     notificationSender = "etienne@atnnn.com";
-    # buildMachinesFiles = []; # TODO
+    buildMachinesFiles = [ (
+      builtins.toFile "hydra-build-machines" ''
+        localhost x86_64-linux,i686-linux - 3 1 kvm
+      ''
+    ) ];
     logo = ./hydra-logo.jpg;
   };
   systemd.services.hydra-evaluator.serviceConfig.Nice = -15;
@@ -114,4 +118,6 @@ let hydraSrc = builtins.fetchTarball "https://github.com/NixOS/hydra/archive/de5
   programs.ssh.extraConfig = ''
     StrictHostKeyChecking no
   '';
+
+  security.sudo.wheelNeedsPassword = false;
 }
