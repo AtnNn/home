@@ -102,11 +102,24 @@ let hydraSrc = builtins.fetchTarball "https://github.com/NixOS/hydra/archive/de5
     virtualHosts."thanos.atnnn.com" = {
       port = 443;
       enableSSL = true;
-      extraConfig = "listen 80; listen [::]:80;";
+      extraConfig = "listen 80; listen [::]:80; access_log /var/log/nginx.log;";
       enableACME = true;
-      locations."/" = {
-        proxyPass = "http://localhost:3000";
+      locations = {
+        "/".proxyPass = "http://localhost:3000";
+        "/downloads" = {
+          extraConfig = ''
+            autoindex on;
+            alias /var/www/downloads;
+          '';
+        };
       };
+    };
+    virtualHosts."proxy" = {
+      port = 4000;
+      locations."/" = {
+        proxyPass = "http://localhost:8080";
+      };
+      basicAuth = { private = "monday"; };
     };
   };
 
