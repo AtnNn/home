@@ -19,6 +19,7 @@
 [user]
 	name = Etienne Laurin
 	email = etienne@atnnn.com
+	signingkey = 3B87619DF812A63A8C1005C30742918E5C8DA04A
 [format]
 	pretty = oneline
 [log]
