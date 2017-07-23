@@ -1,6 +1,6 @@
 { config, pkgs, ... }:
 
-let hydraSrc = builtins.fetchTarball "https://github.com/NixOS/hydra/archive/de55303197d997c4fc5503b52b1321ae9528583d.tar.gz"; in
+let hydraSrc = builtins.fetchTarball "https://github.com/NixOS/hydra/archive/803833aba77e1082c14857aa26933fc7fe5ae190.tar.gz"; in
 
 {
   imports =
@@ -28,9 +28,8 @@ let hydraSrc = builtins.fetchTarball "https://github.com/NixOS/hydra/archive/de5
   time.timeZone = "UTC";
 
   environment.systemPackages = with pkgs; [
-    wget nano docker emacs file git htop ncdu sudo which ghc python3 coreutils vim utillinux p7zip
-    zip unzip nmap gcc6 llvm screen gnupg w3m gdb man gnumake graphviz ruby wine man-pages stdmanpages
-    clang curl nox
+    wget docker file git htop ncdu sudo which python3 coreutils vim utillinux
+    screen gnupg w3m man man-pages stdmanpages curl nox
   ];
 
   services.openssh.enable = true;
@@ -64,6 +63,7 @@ let hydraSrc = builtins.fetchTarball "https://github.com/NixOS/hydra/archive/de5
     binaryCaches = [ "http://hydra.nixos.org/" "https://cache.nixos.org/" ];
     buildCores = 12;
     maxJobs = 3;
+    extraOptions = "auto-optimise-store = true";
 
     # distributedBuilds = true; # TODO
     # buildMachines = [
@@ -80,6 +80,18 @@ let hydraSrc = builtins.fetchTarball "https://github.com/NixOS/hydra/archive/de5
     enable = true;
     hydraURL = "https://thanos.atnnn.com";
     notificationSender = "etienne@atnnn.com";
+    minimumDiskFree = 5;
+    extraConfig = ''
+      max_output_size = 2147483647;
+      <github_authorization>
+        rethinkdb = ${builtins.readFile ./github_token}
+      </github_authorization>
+      <githubstatus>
+        jobs = checkStyle|unitTests
+        inputs = rethinkdb
+        excludeBuildFromContext = 0
+      </githubstatus>
+    '';
     buildMachinesFiles = [ (
       builtins.toFile "hydra-build-machines" ''
         localhost x86_64-linux,i686-linux - 3 1 kvm
@@ -131,6 +143,8 @@ let hydraSrc = builtins.fetchTarball "https://github.com/NixOS/hydra/archive/de5
   programs.ssh.extraConfig = ''
     StrictHostKeyChecking no
   '';
+
+  services.fail2ban.enable = true;
 
   security.sudo.wheelNeedsPassword = false;
 }
