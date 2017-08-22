@@ -1,0 +1,13 @@
+[user]
+	email = etienne@atnnn.com
+	name = Etienne Laurin
+[push]
+	default = simple
+[rerere]
+  enabled = true
+[branch]
+  autosetupmerge = false
+[merge]
+  conflictstyle = diff3
+[mergetool "emacs"]
+  cmd = emacs -nw -Q --no-desktop --eval '(ediff-merge-files-with-ancestor \"'$LOCAL'\" \"'$REMOTE'\" \"'$BASE'\" nil \"'$MERGED'\")'
