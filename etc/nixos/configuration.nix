@@ -1,6 +1,6 @@
 { config, pkgs, ... }:
 
-let hydraSrc = builtins.fetchTarball "https://github.com/NixOS/hydra/archive/803833aba77e1082c14857aa26933fc7fe5ae190.tar.gz"; in
+let hydraSrc = builtins.fetchTarball "https://github.com/NixOS/hydra/archive/a4fc292c83e4bffd7da0eb0e64453b52e5a70fcd.tar.gz"; in
 
 {
   imports =
@@ -112,9 +112,8 @@ let hydraSrc = builtins.fetchTarball "https://github.com/NixOS/hydra/archive/803
     recommendedGzipSettings = true;
     recommendedProxySettings = true;
     virtualHosts."thanos.atnnn.com" = {
-      port = 443;
-      enableSSL = true;
-      extraConfig = "listen 80; listen [::]:80; access_log /var/log/nginx.log;";
+      forceSSL = true;
+      extraConfig = "access_log /var/log/nginx.log;";
       enableACME = true;
       locations = {
         "/".proxyPass = "http://localhost:3000";
@@ -126,13 +125,13 @@ let hydraSrc = builtins.fetchTarball "https://github.com/NixOS/hydra/archive/803
         };
       };
     };
-    virtualHosts."proxy" = {
-      port = 4000;
-      locations."/" = {
-        proxyPass = "http://localhost:8080";
-      };
-      basicAuth = { private = "monday"; };
-    };
+    # virtualHosts."proxy" = {
+    #   port = 4000;
+    #   locations."/" = {
+    #     proxyPass = "http://localhost:8080";
+    #   };
+    #   basicAuth = { private = "monday"; };
+    # };
   };
 
   security.acme.certs."thanos.atnnn.com" = {
