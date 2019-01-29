@@ -1,12 +1,12 @@
 { config, pkgs, ... }:
 
-let hydraSrc = builtins.fetchTarball "https://github.com/NixOS/hydra/archive/a4fc292c83e4bffd7da0eb0e64453b52e5a70fcd.tar.gz"; in
+# let hydraSrc = builtins.fetchTarball "https://github.com/NixOS/hydra/archive/a4fc292c83e4bffd7da0eb0e64453b52e5a70fcd.tar.gz"; in
 
 {
   imports =
     [ # Include the results of the hardware scan.
       ./hardware-configuration.nix
-      "${hydraSrc}/hydra-module.nix"
+      # "${hydraSrc}/hydra-module.nix"
     ];
 
   boot.loader.grub.enable = true;
@@ -60,12 +60,12 @@ let hydraSrc = builtins.fetchTarball "https://github.com/NixOS/hydra/archive/a4f
   nix = {
     useSandbox = "relaxed";
     sandboxPaths = [ "/home/nix/ccache" ];
-    binaryCaches = [ "http://hydra.nixos.org/" "https://cache.nixos.org/" ];
+    binaryCaches = [ "https://cache.nixos.org/" ];
     buildCores = 12;
     maxJobs = 3;
     extraOptions = "auto-optimise-store = true";
 
-    # distributedBuilds = true; # TODO
+    distributedBuilds = true; # TODO
     # buildMachines = [
     #   { hostName = "localhost";
     #     maxJobs = 3;
@@ -76,7 +76,7 @@ let hydraSrc = builtins.fetchTarball "https://github.com/NixOS/hydra/archive/a4f
 
   # nix.gc.automatic = true;
 
-  services.hydra-dev = {
+  services.hydra = {
     enable = true;
     hydraURL = "https://thanos.atnnn.com";
     notificationSender = "etienne@atnnn.com";
@@ -146,4 +146,6 @@ let hydraSrc = builtins.fetchTarball "https://github.com/NixOS/hydra/archive/a4f
   services.fail2ban.enable = true;
 
   security.sudo.wheelNeedsPassword = false;
+
+  programs.gnupg.agent.enable = true;
 }
