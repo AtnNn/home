@@ -1,5 +1,8 @@
-{ config, pkgs, ... }:
+{ ... }:
 
+let
+pkgs = import (fetchTarball "https://nixos.org/channels/nixos-19.03/nixexprs.tar.xz") {};
+in
 # let hydraSrc = builtins.fetchTarball "https://github.com/NixOS/hydra/archive/a4fc292c83e4bffd7da0eb0e64453b52e5a70fcd.tar.gz"; in
 
 {
@@ -17,7 +20,7 @@
 
   networking.firewall = {
     enable = true;
-    allowedTCPPorts = [ 22 443 80 4000 ];
+    allowedTCPPorts = [ 22 443 80 3000 4000 4444 4321 4567];
     allowPing = true;
   };
 
@@ -32,12 +35,13 @@
     screen gnupg w3m man man-pages stdmanpages curl nox
   ];
 
-  services.openssh.enable = true;
-  services.openssh.permitRootLogin = "yes";
-  services.openssh.listenAddresses = [
-    { addr = "0.0.0.0"; port = 22; }
-    # { addr = "0.0.0.0"; port = 443; }
-  ];
+  services.openssh = {
+    enable = true;
+    listenAddresses = [
+      { addr = "0.0.0.0"; port = 22; }
+    ];
+    forwardX11 = true;
+  };
 
   users.extraUsers.atnnn = {
     isNormalUser = true;
@@ -48,7 +52,7 @@
     isNormalUser = true;
   };
 
-  system.stateVersion = "16.09";
+  system.stateVersion = "19.03";
 
   virtualisation.docker.enable = true;
   virtualisation.virtualbox.host.enable = true;
@@ -74,7 +78,7 @@
     # ];
   };
 
-  # nix.gc.automatic = true;
+  nix.gc.automatic = true;
 
   services.hydra = {
     enable = true;
