@@ -3,7 +3,7 @@
         filemode = true
         worktree = /
 [remote "origin"]
-	url = https://github.com/atnnn/home
+	url = git@github.com:atnnn/home
 	fetch = +refs/heads/*:refs/remotes/origin/*
 [branch "thanos"]
         remote = origin
