@@ -1,15 +1,13 @@
 { ... }:
 
 let
-pkgs = import (fetchTarball "https://nixos.org/channels/nixos-19.03/nixexprs.tar.xz") {};
+pkgs = import (fetchTarball "https://nixos.org/channels/nixos-19.09/nixexprs.tar.xz") {};
 in
-# let hydraSrc = builtins.fetchTarball "https://github.com/NixOS/hydra/archive/a4fc292c83e4bffd7da0eb0e64453b52e5a70fcd.tar.gz"; in
 
 {
   imports =
     [ # Include the results of the hardware scan.
       ./hardware-configuration.nix
-      # "${hydraSrc}/hydra-module.nix"
     ];
 
   boot.loader.grub.enable = true;
@@ -121,10 +119,10 @@ in
       enableACME = true;
       locations = {
         "/".proxyPass = "http://localhost:3000";
-        "/downloads" = {
+        "/downloads/" = {
           extraConfig = ''
             autoindex on;
-            alias /var/www/downloads;
+            alias /var/www/downloads/;
           '';
         };
       };

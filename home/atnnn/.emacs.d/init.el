@@ -50,3 +50,16 @@
 ;;             (lambda (_ _) nil))
 
 ;;; highlight-sexp highlight-symbol rainbow-delimiters highlight-tail
+
+(require 'helm-config)
+(global-set-key (kbd "M-x") 'helm-M-x)
+(global-set-key (kbd "C-x C-f") 'helm-find-files)
+(global-set-key (kbd "C-x C-g") 'helm-ls-git-ls)
+(global-set-key (kbd "C-x b") 'helm-mini)
+
+(require 'helm-xref)
+(setq xref-show-xrefs-function 'helm-xref-show-xrefs)
+
+(global-set-key (kbd "C-x k") 'bury-buffer)
+(global-set-key (kbd "C-x K") 'kill-buffer)
+
