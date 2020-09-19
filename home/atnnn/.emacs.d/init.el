@@ -63,3 +63,42 @@
 (global-set-key (kbd "C-x k") 'bury-buffer)
 (global-set-key (kbd "C-x K") 'kill-buffer)
 
+(add-to-list 'load-path "~/code/lean-mode/")
+(require 'lean-mode)
+(require 'helm-lean)
+
+;; (custom-set-variables
+;;  ;; custom-set-variables was added by Custom.
+;;  ;; If you edit it by hand, you could mess it up, so be careful.
+;;  ;; Your init file should contain only one such instance.
+;;  ;; If there is more than one, they won't work right.
+;;  '(lean-executable-name "/home/atnnn/.elan/toolchains/nightly/bin/lean")
+;;  '(lean-extra-arguments (quote ("-j" "11" "--profile")))
+;;  '(lean-memory-limit 12000)
+;;  '(lean-message-boxes-enabled-captions
+;;    (quote
+;;     ("check result" "eval result" "print result" "reduce result" "trace output")))
+;;  '(lean-message-boxes-enabledp t)
+;;  '(lean-rootdir "/home/atnnn/.elan/toolchains/nightly/")
+;;  '(lean-server-show-pending-tasks t)
+;;  '(lean-show-type-add-to-kill-ring t)
+;;  '(lean-timeout-limit 1000000)
+;;  '(menu-bar-mode nil)
+;;  '(package-archives
+;;    (quote
+;;     (("gnu" . "https://elpa.gnu.org/packages/")
+;;      ("melpa" . "http://melpa.org/packages/"))))
+;;  '(package-selected-packages
+;;    (quote
+;;     (cl-libify helm-xref helm json-mode magit nix-mode darkroom))))
+;; (custom-set-faces
+;;  ;; custom-set-faces was added by Custom.
+;;  ;; If you edit it by hand, you could mess it up, so be careful.
+;;  ;; Your init file should contain only one such instance.
+;;  ;; If there is more than one, they won't work right.
+;;  '(lean-server-task-face ((t (:slant italic))) t))
+
+; @begin(65173798)@ - Do not edit these lines - added automatically!
+(if (file-exists-p "/home/atnnn/code/ciao/ciao_emacs/elisp/ciao-site-file.el")
+  (load-file "/home/atnnn/code/ciao/ciao_emacs/elisp/ciao-site-file.el"))
+; @end(65173798)@ - End of automatically added lines.

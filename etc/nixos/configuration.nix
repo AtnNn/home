@@ -1,7 +1,7 @@
 { ... }:
 
 let
-pkgs = import (fetchTarball "https://nixos.org/channels/nixos-19.09/nixexprs.tar.xz") {};
+pkgs = import (fetchTarball "https://nixos.org/channels/nixos-20.09/nixexprs.tar.xz") {};
 in
 
 {
@@ -150,4 +150,10 @@ in
   security.sudo.wheelNeedsPassword = false;
 
   programs.gnupg.agent.enable = true;
+
+  services.earlyoom = {
+    enable = true;
+    freeMemThreshold = 1;
+    freeSwapThreshold = 50; 
+  };
 }
