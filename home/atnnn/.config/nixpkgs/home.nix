@@ -2,7 +2,18 @@
 
 let
   nixpkgs-path = fetchTarball "https://nixos.org/channels/nixos-20.09/nixexprs.tar.xz";
+  home-manager-path = fetchTarball "https://github.com/nix-community/home-manager/archive/master.tar.gz";
+
   pkgs = import nixpkgs-path {};
+  home-manager = (import home-manager-path {inherit pkgs;}).home-manager;
+
+  hm-nix-path = "nixpkgs=${nixpkgs-path}:home-manager=${home-manager-path}";
+
+  custom-home-manager = pkgs.writeScriptBin "home-manager" ''
+    #!${pkgs.stdenv.shell}
+    export NIX_PATH='${hm-nix-path}'
+    exec ${home-manager}/bin/home-manager "$@"
+  '';
 in
 
 {
@@ -11,7 +22,8 @@ in
     username = "atnnn";
     homeDirectory = "/home/atnnn";
     sessionVariables = {
-      NIX_PATH = "nixpkgs=${nixpkgs-path}";
+      HM_NIX_PATH = hm-nix-path;
+      PATH = "~/.local/bin:$PATH";
     };
   };
 
@@ -66,24 +78,29 @@ in
     userName = "Etienne Laurin";
   };
 
-  programs.home-manager = {
-    enable = true;
+  home.file = {
+    ".config/nixpkgs/home.nix.current".source = ./home.nix;
+    ".config/nixpkgs/config.nix".text = ''
+      {
+        allowUnfree = true;
+      }'';
+    ".config/nix/nix.conf".text = ''
+      experimental-features = nix-command flakes
+    '';
   };
-
-  # home.file = {
-  #
-  # };
 
   home.packages = [
     pkgs.autoconf
     pkgs.automake
     pkgs.busybox
+    (pkgs.lib.hiPrio pkgs.coreutils)
     pkgs.cabal-install
     pkgs.cmake
     pkgs.cppcheck
     pkgs.exercism
     (pkgs.lib.hiPrio pkgs.gcc)
     pkgs.clang
+    pkgs.clang-tools
     pkgs.haskellPackages.git-annex
     pkgs.gnugrep
     pkgs.gnumake
@@ -99,7 +116,7 @@ in
     pkgs.lsof
     pkgs.netcat-gnu
     pkgs.ninja
-    (pkgs.lib.hiPrio pkgs.nix)
+    (pkgs.lib.hiPrio pkgs.nixUnstable)
     pkgs.nodejs
     pkgs.openbox
     pkgs.p7zip
@@ -120,5 +137,8 @@ in
     pkgs.whois
     pkgs.wine
     pkgs.xterm
+    pkgs.gdb
+    pkgs.gprolog
+    custom-home-manager
   ];
 }

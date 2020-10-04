@@ -60,12 +60,17 @@ in
   };
 
   nix = {
+    package = pkgs.nixUnstable;
     useSandbox = "relaxed";
     sandboxPaths = [ "/home/nix/ccache" ];
     binaryCaches = [ "https://cache.nixos.org/" ];
     buildCores = 12;
     maxJobs = 3;
-    extraOptions = "auto-optimise-store = true";
+    trustedUsers = [ "@wheel" ];
+    extraOptions = ''
+      auto-optimise-store = true
+      experimental-features = nix-command flakes
+    '';
 
     distributedBuilds = true; # TODO
     # buildMachines = [
