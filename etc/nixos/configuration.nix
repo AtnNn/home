@@ -69,7 +69,9 @@ in
     trustedUsers = [ "@wheel" ];
     extraOptions = ''
       auto-optimise-store = true
-      experimental-features = nix-command flakes
+      experimental-features = nix-command flakes recursive-nix ca-derivation
+      trusted-substituters = https://lean4.cachix.org/
+      trusted-public-keys = cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY= lean4.cachix.org-1:mawtxSxcaiWE24xCXXgh3qnvlTkyU7evRRnGeAhD4Wk=
     '';
 
     distributedBuilds = true; # TODO
@@ -90,21 +92,13 @@ in
     minimumDiskFree = 5;
     extraConfig = ''
       max_output_size = 2147483647;
-      <github_authorization>
-        rethinkdb = ${builtins.readFile ./github_token}
-      </github_authorization>
-      <githubstatus>
-        jobs = checkStyle|unitTests
-        inputs = rethinkdb
-        excludeBuildFromContext = 0
-      </githubstatus>
     '';
     buildMachinesFiles = [ (
       builtins.toFile "hydra-build-machines" ''
         localhost x86_64-linux,i686-linux - 3 1 kvm
       ''
     ) ];
-    logo = ./hydra-logo.jpg;
+    # logo = ./hydra-logo.jpg;
   };
   systemd.services.hydra-evaluator.serviceConfig.Nice = -15;
 

@@ -51,6 +51,8 @@ in
       epkg.json-mode
       epkg.nix-mode
       epkg.wgrep
+      epkg.projectile
+      epkg.lsp-mode
     ];
   };
 
@@ -63,7 +65,9 @@ in
       rerere.enabled = true;
       branch.autosetupmerge = false;
       merge.conflictstyle = "diff3";
-      mergetool.emacs.cmd = ''emacs -nw -Q --no-desktop --eval '(ediff-merge-files-with-ancestor \"'$LOCAL'\" \"'$REMOTE'\" \"'$BASE'\" nil \"'$MERGED'\")' '';
+      mergetool.emacs.cmd = ''
+        emacs -nw -Q --no-desktop --eval '(ediff-merge-files-with-ancestor \"'$LOCAL'\" \"'$REMOTE'\" \"'$BASE'\" nil \"'$MERGED'\")'
+      '';
       log.abbrevCommit = true;
       log.decorate = "short";
       format.pretty = "oneline";
@@ -73,6 +77,7 @@ in
       "*~"
       "*#"
       "result"
+      "TAGS"
     ];
     userEmail = "etienne@atnnn.com";
     userName = "Etienne Laurin";
@@ -92,8 +97,8 @@ in
   home.packages = [
     pkgs.autoconf
     pkgs.automake
-    pkgs.busybox
     (pkgs.lib.hiPrio pkgs.coreutils)
+    pkgs.binutils
     pkgs.cabal-install
     pkgs.cmake
     pkgs.cppcheck
@@ -127,6 +132,7 @@ in
     pkgs.python
     pkgs.qemu
     pkgs.rlwrap
+    pkgs.rtorrent
     pkgs.sbt
     pkgs.scala
     pkgs.sqlite
@@ -135,10 +141,10 @@ in
     pkgs.texlive.combined.scheme-full
     pkgs.haskellPackages.warp
     pkgs.whois
-    pkgs.wine
     pkgs.xterm
     pkgs.gdb
     pkgs.gprolog
+    pkgs.wineWowPackages.full
     custom-home-manager
   ];
 }

@@ -41,8 +41,9 @@
 ;;; Packages
 (require 'package)
 (add-to-list 'package-archives '("gnu" . "https://elpa.gnu.org/packages/"))
-(add-to-list 'package-archives '("marmalade" . "http://marmalade-repo.org/packages/"))
-(add-to-list 'package-archives '("melpa" . "http://melpa.milkbox.net/packages/"))
+;(add-to-list 'package-archives '("marmalade" . "http://marmalade-repo.org/packages/"))
+;(add-to-list 'package-archives '("melpa" . "http://melpa.milkbox.net/packages/"))
+(add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/"))
 (package-initialize)
 
 ;; Paredit
@@ -63,9 +64,11 @@
 (global-set-key (kbd "C-x k") 'bury-buffer)
 (global-set-key (kbd "C-x K") 'kill-buffer)
 
-(add-to-list 'load-path "~/code/lean-mode/")
-(require 'lean-mode)
-(require 'helm-lean)
+;(add-to-list 'load-path "~/code/lean-mode/")
+;(require 'lean-mode)
+;(require 'helm-lean)
+(add-to-list 'load-path "~/code/lean4/lean4-mode/")
+(require 'lean4-mode)
 
 ;; (custom-set-variables
 ;;  ;; custom-set-variables was added by Custom.
