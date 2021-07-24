@@ -18,12 +18,18 @@
  '(global-auto-revert-mode t)
  '(indent-tabs-mode nil)
  '(lean-input-user-translations '(("bV" "𝕍") ("bI" "𝕀")))
+ '(lean4-executable-name "/home/atnnn/code/lean4-sandbox/lean4-root/bin/lean")
+ '(lean4-rootdir "/home/atnnn/code/lean4-sandbox/lean4-root")
  '(menu-bar-mode nil)
  '(package-archives
    '(("gnu" . "https://elpa.gnu.org/packages/")
      ("melpa" . "http://melpa.org/packages/")))
  '(package-selected-packages
-   '(lsp-mode eink-theme wgrep projectile scala-mode cl-libify helm-xref helm json-mode magit nix-mode darkroom))
+   '(helm-projectile lsp-mode eink-theme wgrep projectile scala-mode cl-libify helm-xref helm json-mode magit nix-mode darkroom))
+ '(projectile-completion-system 'helm)
+ '(projectile-current-project-on-switch 'move-to-end)
+ '(projectile-mode t nil (projectile))
+ '(projectile-use-git-grep t)
  '(safe-local-variable-values
    '((eval c-set-offset 'inlambda 0)
      (eval c-set-offset 'access-label '-)

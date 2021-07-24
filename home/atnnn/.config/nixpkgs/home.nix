@@ -1,7 +1,7 @@
 { ... }:
 
 let
-  nixpkgs-path = fetchTarball "https://nixos.org/channels/nixos-20.09/nixexprs.tar.xz";
+  nixpkgs-path = fetchTarball "https://nixos.org/channels/nixos-21.05/nixexprs.tar.xz";
   home-manager-path = fetchTarball "https://github.com/nix-community/home-manager/archive/master.tar.gz";
 
   pkgs = import nixpkgs-path {};
@@ -11,7 +11,7 @@ let
 
   custom-home-manager = pkgs.writeScriptBin "home-manager" ''
     #!${pkgs.stdenv.shell}
-    export NIX_PATH='${hm-nix-path}'
+    export NIX_PATH="$(nix eval --raw -f .config/nixpkgs/home.nix home.sessionVariables.HM_NIX_PATH)"
     exec ${home-manager}/bin/home-manager "$@"
   '';
 in
@@ -53,6 +53,8 @@ in
       epkg.wgrep
       epkg.projectile
       epkg.lsp-mode
+      epkg.projectile
+      epkg.helm-projectile
     ];
   };
 
@@ -95,6 +97,7 @@ in
   };
 
   home.packages = [
+    custom-home-manager
     pkgs.autoconf
     pkgs.automake
     (pkgs.lib.hiPrio pkgs.coreutils)
@@ -145,6 +148,5 @@ in
     pkgs.gdb
     pkgs.gprolog
     pkgs.wineWowPackages.full
-    custom-home-manager
   ];
 }

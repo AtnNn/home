@@ -105,3 +105,94 @@
 (if (file-exists-p "/home/atnnn/code/ciao/ciao_emacs/elisp/ciao-site-file.el")
   (load-file "/home/atnnn/code/ciao/ciao_emacs/elisp/ciao-site-file.el"))
 ; @end(65173798)@ - End of automatically added lines.
+
+(define-key projectile-mode-map (kbd "C-c p") 'projectile-command-map)
+
+(dir-locals-set-class-variables
+ 'non-editable
+ '((nil . ((buffer-read-only . t)
+           (show-trailing-whitespace . nil)))))
+
+(dir-locals-set-class-variables
+ 'editable
+ '((nil . ((buffer-read-only . nil)
+           (show-trailing-whitespace . t)))))
+
+(dir-locals-set-directory-class "/" 'non-editable)
+(dir-locals-set-directory-class "/home/atnnn" 'editable)
+
+(defun pretty-symbol-delimit-p (left right)
+  (or (not (eq left right))
+      (memq left '(?. ?( ?)))))
+
+(defun custom-psdcp (start end _match)
+    "Return true iff the symbol MATCH should be composed.
+The symbol starts at position START and ends at position END.
+This is the default for `prettify-symbols-compose-predicate'
+which is suitable for most programming languages such as C or Lisp."
+    ;; Check that the chars should really be composed into a symbol.
+    (and
+     (pretty-symbol-delimit-p
+      (char-syntax (or (char-before start) ?\s))
+      (char-syntax (char-after start)))
+     (pretty-symbol-delimit-p
+      (char-syntax (char-before end))
+      (char-syntax (or (char-after start) ?\s)))
+          (not (nth 8 (syntax-ppss)))))
+
+(add-hook
+ 'c-mode-common-hook
+ (lambda ()
+   (setq prettify-symbols-compose-predicate #'custom-psdcp)
+   (setq
+    prettify-symbols-alist
+    '(
+      ("->" . ?→)
+      ("exists" . ?∃)
+      ("<=" . ?≤)
+      (">=" . ?≥)
+      ("==" . ?≡)
+      ("!" . ?¬)
+      ("!=" . ?≢)
+      ("&&" . ?⋀)
+      ("||" . ?⋁)
+      ("true" . ?⊤)
+      ("false" . ?⊥)
+      ("bool" . ?𝔹)
+      ("nullptr" . ?∅)
+      (">>" . ?≫)
+      ("<<" . ?≪)
+      ("<<<" . ?⋘)
+      (">>>" . ?⋙)
+      ("[0]" . ?₀)
+      ("[1]" . ?₁)
+      ("[2]" . ?₂)
+      ("[3]" . ?₃)
+      ("[4]" . ?₄)
+      ("[n]" . ?ₙ)
+      ("[i]" . ?ᵢ)
+      ("[j]" . ?ⱼ)
+      ("[k]" . ?ₖ)
+      ("[&]" . ?λ)
+      ("..." . ?…)
+      (" * " . ?∙) ; or · ⨯ ⨱ ✕
+      ("*" . ?∗) ; or ⁎
+      ("**" . ?⁑)
+      ("()" . ?≬)
+      ("(;;)" . ?∞)
+      ("=" . ?⇇) ; or  ＝
+      ("auto" . ?∵)
+      ("return" . ?∎)
+      ("&" . ?§)
+      ;(" & " . ?⨃)
+      ;(" | " . ?⩀)
+      (" ^ " . ?⊕)
+      (";" . ?⸳)
+      ("{" . ?⸢)
+      ("}" . ?⸥)
+      ("goto" . ?⎌)
+      ("i" . ?ꙇ)
+      ("if" . ?⎇)
+      ("else" . ?⌥)
+      ;("#include" . ?⭅)
+      ))))
