@@ -4,14 +4,18 @@ let
   nixpkgs-path = fetchTarball "https://nixos.org/channels/nixos-21.05/nixexprs.tar.xz";
   home-manager-path = fetchTarball "https://github.com/nix-community/home-manager/archive/master.tar.gz";
 
-  pkgs = import nixpkgs-path {};
+  pkgs = import nixpkgs-path {
+    overlays = [
+      (import (builtins.fetchTarball "https://github.com/oxalica/rust-overlay/archive/master.tar.gz"))
+    ];
+  };
   home-manager = (import home-manager-path {inherit pkgs;}).home-manager;
 
   hm-nix-path = "nixpkgs=${nixpkgs-path}:home-manager=${home-manager-path}";
 
   custom-home-manager = pkgs.writeScriptBin "home-manager" ''
     #!${pkgs.stdenv.shell}
-    export NIX_PATH="$(nix eval --raw -f .config/nixpkgs/home.nix home.sessionVariables.HM_NIX_PATH)"
+    export NIX_PATH="$(nix eval --raw -f ~/.config/nixpkgs/home.nix home.sessionVariables.HM_NIX_PATH)"
     exec ${home-manager}/bin/home-manager "$@"
   '';
 in
@@ -55,6 +59,12 @@ in
       epkg.lsp-mode
       epkg.projectile
       epkg.helm-projectile
+      epkg.dash
+      epkg.f
+      epkg.flycheck
+      epkg.magit-section
+      epkg.s
+      epkg.rust-mode
     ];
   };
 
@@ -148,5 +158,18 @@ in
     pkgs.gdb
     pkgs.gprolog
     pkgs.wineWowPackages.full
+    pkgs.wasm-pack
+    pkgs.cargo-generate
+    pkgs.nodePackages.npm
+    (pkgs.rust-bin.stable.latest.default.override {
+      targets = [
+        "x86_64-unknown-linux-gnu"
+        "wasm32-unknown-unknown"
+      ];
+    })
+    pkgs.llvmPackages_latest.llvm
+    pkgs.llvmPackages_latest.bintools
+    # pkgs.rustup
+    pkgs.llvmPackages_latest.lld
   ];
 }

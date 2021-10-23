@@ -1,7 +1,7 @@
 { ... }:
 
 let
-pkgs = import (fetchTarball "https://nixos.org/channels/nixos-20.09/nixexprs.tar.xz") {};
+pkgs = import (fetchTarball "https://nixos.org/channels/nixos-21.05/nixexprs.tar.xz") {};
 in
 
 {
