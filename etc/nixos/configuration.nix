@@ -21,7 +21,8 @@
   boot.loader.grub.device = "/dev/sda"; # or "nodev" for efi only
 
   networking.hostName = "puck"; # Define your hostname.
-  networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
+  # networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
+  networking.networkmanager.enable = true;
 
   # Set your time zone.
   time.timeZone = "America/Phoenix";
@@ -45,14 +46,14 @@
   # };
 
   # Enable the X11 windowing system.
-  services.xserver.enable = true;
-
+  services.xserver = {
+    enable = true;
+    layout = "us";
+    xkbOptions = "ctrl:nocaps";
+  };
 
   
 
-  # Configure keymap in X11
-  services.xserver.layout = "us";
-  # services.xserver.xkbOptions = "eurosign:e";
 
   # Enable CUPS to print documents.
   # services.printing.enable = true;
@@ -67,7 +68,8 @@
   # Define a user account. Don't forget to set a password with ‘passwd’.
   users.users.atnnn = {
      isNormalUser = true;
-     extraGroups = [ "wheel" ]; # Enable ‘sudo’ for the user.
+     extraGroups = [ "wheel" "networkmanager" "audio" "docker" ]; # Enable ‘sudo’ for the user.
+     
   };
 
   # List packages installed in system profile. To search, run:
@@ -106,5 +108,27 @@
   # (e.g. man configuration.nix or on https://nixos.org/nixos/options.html).
   system.stateVersion = "21.05"; # Did you read the comment?
 
+  services.locate = {
+    enable = true;
+  };
+  services.redshift = {
+    enable = true;
+  };
+  location = {
+    latitude = 33.4;
+    longitude = -111.8;
+  };
+  hardware.bluetooth.enable = true;
+  nixpkgs.config = {
+    allowUnfree = true;
+  };
+  fonts = {
+    enableDefaultFonts = true;
+    fontDir.enable = true;
+    fonts = with pkgs; [
+      dejavu_fonts freefont_ttf unifont unifont_upper
+    ];
+  };
+  virtualisation.docker.enable = true;
 }
 
