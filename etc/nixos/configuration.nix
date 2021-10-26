@@ -2,9 +2,10 @@
 # your system.  Help is available in the configuration.nix(5) man page
 # and in the NixOS manual (accessible by running ‘nixos-help’).
 
-{ config, pkgs, ... }:
-
-{
+{ ... }:
+let
+  pkgs = import (fetchTarball "https://nixos.org/channels/nixos-unstable/nixexprs.tar.xz") {};
+in {
   imports =
     [ # Include the results of the hardware scan.
       ./hardware-configuration.nix
@@ -77,6 +78,7 @@
   environment.systemPackages = with pkgs; [
     vim
     wget
+    powertop
   ];
 
   services.xserver.windowManager.openbox.enable = true;
@@ -130,5 +132,16 @@
     ];
   };
   virtualisation.docker.enable = true;
+  powerManagement = {
+    enable = true;
+    cpuFreqGovernor = "ondemand";
+    powertop.enable = true;
+  };
+  programs.sway = {
+    enable = true;
+    # extraPackages = with pkgs; [];
+    # extraSessionCommands = '' '';
+  };
+  services.xserver.libinput.touchpad.naturalScrolling = true;
 }
 

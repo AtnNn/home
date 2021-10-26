@@ -1,7 +1,7 @@
 { ... }:
 
 let
-  nixpkgs-path = fetchTarball "https://nixos.org/channels/nixos-21.05/nixexprs.tar.xz";
+  nixpkgs-path = fetchTarball "https://nixos.org/channels/nixos-unstable/nixexprs.tar.xz";
   home-manager-path = fetchTarball "https://github.com/nix-community/home-manager/archive/master.tar.gz";
 
   pkgs = import nixpkgs-path {
@@ -47,11 +47,12 @@ in
 
   programs.emacs = {
     enable = true;
-    package = pkgs.emacs-nox;
+    package = pkgs.emacs;
     extraPackages = epkg: [
       epkg.flycheck
       epkg.magit
       epkg.helm
+      epkg.helm-xref
       epkg.json-mode
       epkg.nix-mode
       epkg.wgrep
@@ -171,5 +172,8 @@ in
     pkgs.llvmPackages_latest.bintools
     # pkgs.rustup
     pkgs.llvmPackages_latest.lld
+    pkgs.acpi
+    pkgs.signal-desktop
+    pkgs.screen
   ];
 }
