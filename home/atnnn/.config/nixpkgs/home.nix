@@ -1,34 +1,19 @@
-{ ... }:
-
+{ pkgs, config, ... }:
 let
-  nixpkgs-path = fetchTarball "https://nixos.org/channels/nixos-unstable/nixexprs.tar.xz";
-  home-manager-path = fetchTarball "https://github.com/nix-community/home-manager/archive/master.tar.gz";
-
-  pkgs = import nixpkgs-path {
-    overlays = [
-      (import (builtins.fetchTarball "https://github.com/oxalica/rust-overlay/archive/master.tar.gz"))
-    ];
-  };
-  home-manager = (import home-manager-path {inherit pkgs;}).home-manager;
-
-  hm-nix-path = "nixpkgs=${nixpkgs-path}:home-manager=${home-manager-path}";
-
-  custom-home-manager = pkgs.writeScriptBin "home-manager" ''
-    #!${pkgs.stdenv.shell}
-    export NIX_PATH="$(nix eval --raw -f ~/.config/nixpkgs/home.nix home.sessionVariables.HM_NIX_PATH)"
-    exec ${home-manager}/bin/home-manager "$@"
-  '';
-in
-
-{
+  nix-path = builtins.getEnv "NIX_PATH";
+in {
   home = {
     stateVersion = "20.09";
     username = "atnnn";
     homeDirectory = "/home/atnnn";
     sessionVariables = {
-      HM_NIX_PATH = hm-nix-path;
+      NIX_PATH = nix-path;
       PATH = "~/.local/bin:$PATH";
     };
+  };
+
+  nixpkgs = {
+    config.allowUnfree = true;
   };
 
   programs.bash = {
@@ -99,16 +84,40 @@ in
   home.file = {
     ".config/nixpkgs/home.nix.current".source = ./home.nix;
     ".config/nixpkgs/config.nix".text = ''
-      {
-        allowUnfree = true;
-      }'';
+      builtins.fromJSON ${pkgs.lib.strings.escapeNixString (builtins.toJSON config.nixpkgs.config)}
+    '';
     ".config/nix/nix.conf".text = ''
       experimental-features = nix-command flakes
     '';
   };
 
+  programs.waybar.settings = {
+    enable = true;
+    position = "top";
+  };
+  wayland.windowManager.sway = {
+    enable = true;
+    config = {
+      modifier = "Mod4";
+      # input =
+      # keybindings = let
+      #   modifier = config.wayland.windowManager.sway.config.modifier;
+      # in lib.mkOptionDefault { }
+      # menu =
+      # startup = { command = "..."; always = true; }
+      # terminal =
+      window.hideEdgeBorders = "both";
+      # extraSessionCommands = '' ''
+      # assigns =
+      bars = [{
+        position = "top";
+        command = "$(pkgs.waybar)/bin/waybar";
+      }];
+    };
+    wrapperFeatures.gtk = true;
+  };
+
   home.packages = [
-    custom-home-manager
     pkgs.autoconf
     pkgs.automake
     (pkgs.lib.hiPrio pkgs.coreutils)
@@ -175,5 +184,7 @@ in
     pkgs.acpi
     pkgs.signal-desktop
     pkgs.screen
+    pkgs.firefox
+    pkgs.file
   ];
 }
