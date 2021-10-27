@@ -1,6 +1,11 @@
 { pkgs, config, ... }:
 let
   nix-path = builtins.getEnv "NIX_PATH";
+  home-manager-custom = pkgs.writeScriptBin "home-manager" ''
+    #!${pkgs.stdenv.shell}
+    export NIX_PATH="${nix-path}"
+    exec ${(import <home-manager> { inherit pkgs; }).home-manager}/bin/home-manager "$@"
+  '';
 in {
   home = {
     stateVersion = "20.09";
@@ -94,6 +99,7 @@ in {
   programs.waybar.settings = {
     enable = true;
     position = "top";
+    layer = "top";
   };
   wayland.windowManager.sway = {
     enable = true;
@@ -110,7 +116,6 @@ in {
       # extraSessionCommands = '' ''
       # assigns =
       bars = [{
-        position = "top";
         command = "$(pkgs.waybar)/bin/waybar";
       }];
     };
@@ -118,6 +123,7 @@ in {
   };
 
   home.packages = [
+    home-manager-custom
     pkgs.autoconf
     pkgs.automake
     (pkgs.lib.hiPrio pkgs.coreutils)

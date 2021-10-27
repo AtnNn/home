@@ -15,5 +15,5 @@ in
 pkgs.writeScriptBin "home-upgrade" ''
   #!${pkgs.stdenv.shell}
   export NIX_PATH="${nix-path}"
-  exec ${home-manager}/bin/home-manager --argstr nix-path "$NIX_PATH" "${"$"}{@:-switch}"
+  exec ${home-manager}/bin/home-manager "${"$"}{@:-switch}"
 ''
