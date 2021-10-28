@@ -37,10 +37,11 @@ in {
     enable = true;
     settings = {
       default_session = {
-        command = "${pkgs.greetd.tuigreet}/bin/tuigreet --time --remember --cmd sway";
+        command = "${pkgs.greetd.tuigreet}/bin/tuigreet --time --remember --cmd /run/current-system/sw/bin/sway";
         user = "greeter";
       };
     };
+    vt = 7;
   };
   services.xserver = {
     # enable = true;
@@ -118,5 +119,14 @@ in {
     criticalPowerAction = "HybridSleep";
   };
   services.auto-cpufreq.enable = true;
+  services.pipewire.enable = true;
+  xdg.portal = {
+    enable = true;
+    extraPortals = with pkgs; [
+      # xdg-desktop-portal-wlr
+      xdg-desktop-portal-gtk
+    ];
+    gtkUsePortal = true;
+  };
 }
 
