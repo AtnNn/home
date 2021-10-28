@@ -13,17 +13,21 @@ in {
     homeDirectory = "/home/atnnn";
     sessionVariables = {
       NIX_PATH = nix-path;
-      PATH = "~/.local/bin:$PATH";
     };
+    sessionPath = [ "~/.local/bin" ];
   };
 
   nixpkgs = {
     config.allowUnfree = true;
   };
 
+  manual.manpages.enable = true;
+
   programs.bash = {
     enable = true;
-    # initExtra = "";
+    initExtra = ''
+      export NIX_PATH="${nix-path}"
+    '';
     # profileExtra = "";
     shellAliases = {
       gl = ''git log --graph --color --pretty=format:"%C(auto)%h%d %s %Cblue%an %ar"'';
@@ -96,31 +100,82 @@ in {
     '';
   };
 
-  programs.waybar.settings = {
+  programs.waybar = {
     enable = true;
-    position = "top";
-    layer = "top";
+    settings = [{
+      position = "top";
+      layer = "top";
+      modules-left = ["sway/workspaces"];
+      modules-center = ["sway/window" "sway/mode"];
+      modules-right = ["tray" "bluetooth" "pulseaudio" "battery" "clock"];
+      modules = {
+        battery = {
+          format = "{capacity}% {time}";
+          format-time = "{H}:{M}";
+        };
+        tray = {
+          show-passive-items = true;
+        };
+        pulseaudio = {
+          on-click = "pavucontrol";
+        };
+      };
+    }];
   };
   wayland.windowManager.sway = {
     enable = true;
     config = {
       modifier = "Mod4";
-      # input =
-      # keybindings = let
-      #   modifier = config.wayland.windowManager.sway.config.modifier;
-      # in lib.mkOptionDefault { }
-      # menu =
-      # startup = { command = "..."; always = true; }
-      # terminal =
+      input."type:keyboard".xkb_options = "ctrl:nocaps";
+      input."type:touchpad" = {
+        accel_profile = "adaptive";
+        natural_scroll = "enabled";
+        tap = "enabled";
+        drag = "enabled";
+        dwt = "enabled";
+        tap_button_map = "lrm";
+      };
+      keybindings = let
+        modifier = config.wayland.windowManager.sway.config.modifier;
+      in pkgs.lib.mkOptionDefault {
+        "XF86AudioRaiseVolume" = "exec pactl set-sink-volume @DEFAULT_SINK@ +5%";
+        "XF86AudioLowerVolume" = "exec pactl set-sink-volume @DEFAULT_SINK@ -5%";
+        "XF86AudioMute" = "exec pactl set-sink-mute @DEFAULT_SINK@ toggle";
+        "XF86AudioMicMute" = "exec pactl set-source-mute @DEFAULT_SOURCE@ toggle";
+        "XF86MonBrightnessDown" = "exec brightnessctl set 5%-";
+        "XF86MonBrightnessUp" = "exec brightnessctl set +5%";
+        "XF86AudioPlay" = "exec playerctl play-pause";
+        "XF86AudioNext" = "exec playerctl next";
+        "XF86AudioPrev" = "exec playerctl previous";
+      };
+      startup = [
+        { command = ''
+            swayidle -w \
+            timeout 600 'swaylock -f -c 000000' \
+            timeout 660 'swaymsg "output * dpms off"' \
+                    resume 'swaymsg "output * dpms on"' \
+                    before-sleep 'swaylock -f -c 000000'
+          '';
+        }
+      ];
+      terminal = "${pkgs.alacritty}/bin/alacritty";
       window.hideEdgeBorders = "both";
-      # extraSessionCommands = '' ''
-      # assigns =
       bars = [{
-        command = "$(pkgs.waybar)/bin/waybar";
+        position = "top";
+        command = "waybar";
       }];
     };
+    extraSessionCommands = ''
+    export SDL_VIDEODRIVER=wayland
+    export _JAVA_AWT_WM_NONREPARENTING=1
+    export QT_WAYLAND_DISABLE_WINDOWDECORATION=1
+    export QT_QPA_PLATFORM=wayland
+    export MOZ_ENABLE_WAYLAND 1
+    '';
     wrapperFeatures.gtk = true;
   };
+
+  home.keyboard.options = [ "ctrl:nocaps" ];
 
   home.packages = [
     home-manager-custom
@@ -192,5 +247,8 @@ in {
     pkgs.screen
     pkgs.firefox
     pkgs.file
+    pkgs.brightnessctl
+    pkgs.playerctl
+    pkgs.pavucontrol
   ];
 }

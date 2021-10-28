@@ -97,6 +97,7 @@ in {
     fontDir.enable = true;
     fonts = with pkgs; [
       dejavu_fonts freefont_ttf unifont unifont_upper
+      font-awesome noto-fonts noto-fonts-emoji
     ];
   };
 
