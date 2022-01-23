@@ -202,7 +202,7 @@ in {
     pkgs.imagemagick
     pkgs.isabelle
     pkgs.jq
-    pkgs.lean
+    # pkgs.lean
     pkgs.less
     pkgs.lsof
     pkgs.netcat-gnu
@@ -252,5 +252,14 @@ in {
     pkgs.brightnessctl
     pkgs.playerctl
     pkgs.pavucontrol
+    pkgs.pkg-config
+    pkgs.spirv-tools
+    pkgs.rust-analyzer
+    pkgs.zathura
+    pkgs.grim
+    pkgs.slurp
+    pkgs.jdk
+    pkgs.elan
+    (pkgs.lib.hiPrio pkgs.gambit)
   ];
 }

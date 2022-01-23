@@ -70,8 +70,8 @@
 ;(require 'lean-mode)
 ;(require 'helm-lean)
 
-;(add-to-list 'load-path "~/code/lean4/lean4-mode/")
-;(require 'lean4-mode)
+(add-to-list 'load-path "~/code/lean4/lean4-mode/")
+(require 'lean4-mode)
 
 ;; (custom-set-variables
 ;;  ;; custom-set-variables was added by Custom.
@@ -199,3 +199,5 @@ which is suitable for most programming languages such as C or Lisp."
       ("else" . ?⌥)
       ;("#include" . ?⭅)
       ))))
+
+(setq lsp-keymap-prefix "C-c l")

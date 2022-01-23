@@ -72,6 +72,7 @@ in {
     powertop
     acpi
     w3m
+    ntfs3g
   ];
 
   programs.mtr.enable = true;
@@ -127,6 +128,22 @@ in {
       xdg-desktop-portal-gtk
     ];
     gtkUsePortal = true;
+  };
+  nix = {
+    autoOptimiseStore = true;
+    gc = {
+      automatic = true;
+      dates = "weekly";
+      options = "--delete-older-than 30d";
+    };
+  };
+  services.printing = {
+    enable = true;
+    drivers = [ pkgs.hplip ];
+  };
+  services.avahi = {
+    enable = true;
+    nssmdns = true;
   };
 }
 

@@ -19,8 +19,9 @@
  '(global-auto-revert-mode t)
  '(indent-tabs-mode nil)
  '(lean-input-user-translations '(("bV" "𝕍") ("bI" "𝕀")))
- '(lean4-executable-name "/home/atnnn/code/lean4/result/bin/lean")
- '(lean4-rootdir "/home/atnnn/code/lean4/result/lib/lean")
+ '(lean4-executable-name "/home/atnnn/.nix-profile/bin/lean")
+ '(lean4-rootdir
+   "/home/atnnn/.elan/toolchains/leanprover--lean4---nightly-2022-01-06/lib/lean")
  '(menu-bar-mode nil)
  '(package-archives
    '(("gnu" . "https://elpa.gnu.org/packages/")
@@ -48,4 +49,4 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- )
+ '(default ((t (:inherit nil :extend nil :stipple nil :background "black" :foreground "WhiteSmoke" :inverse-video nil :box nil :strike-through nil :overline nil :underline nil :slant normal :weight normal :height 190 :width normal :foundry "PfEd" :family "DejaVu Sans")))))
