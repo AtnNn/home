@@ -18,6 +18,7 @@
    '(beginning-of-line beginning-of-buffer end-of-line end-of-buffer end-of-file buffer-read-only file-supersession mark-inactive))
  '(global-auto-revert-mode t)
  '(indent-tabs-mode nil)
+ '(lean-extra-arguments '("--profile"))
  '(lean-input-user-translations '(("bV" "𝕍") ("bI" "𝕀")))
  '(lean4-executable-name "/home/atnnn/.nix-profile/bin/lean")
  '(lean4-rootdir
@@ -43,10 +44,14 @@
      (eval c-set-offset 'defun-open 0)
      (eval c-set-offset 'innamespace 0)
      (indicate-empty-lines . t)
-     (c-block-comment-prefix . "  "))))
+     (c-block-comment-prefix . "  ")))
+ '(scroll-bar-mode nil)
+ '(split-height-threshold 120)
+ '(split-width-threshold 80)
+ '(tool-bar-mode nil))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(default ((t (:inherit nil :extend nil :stipple nil :background "black" :foreground "WhiteSmoke" :inverse-video nil :box nil :strike-through nil :overline nil :underline nil :slant normal :weight normal :height 190 :width normal :foundry "PfEd" :family "DejaVu Sans")))))
+ '(default ((t (:inherit nil :extend nil :stipple nil :background "black" :foreground "WhiteSmoke" :inverse-video nil :box nil :strike-through nil :overline nil :underline nil :slant normal :weight normal :height 140 :width normal :foundry "PfEd" :family "DejaVu Sans")))))

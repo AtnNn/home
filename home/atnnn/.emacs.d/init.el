@@ -200,4 +200,19 @@ which is suitable for most programming languages such as C or Lisp."
       ;("#include" . ?⭅)
       ))))
 
-(setq lsp-keymap-prefix "C-c l")
+;(setq lsp-keymap-prefix "C-c l")
+(define-key lsp-mode-map (kbd "C-c l") lsp-command-map)
+
+(let ((quail-current-package (assoc "Lean" quail-package-alist)))
+  (quail-defrule "\\=" ["＝"]))
+
+(defun lean-insert-suggestion ()
+  (interactive)
+  (let ((contents (with-current-buffer "*Lean Next Error*" (buffer-string))))
+    (save-match-data
+      (if (string-match "Try this: \\(.*\\)" contents)
+          (save-excursion
+            (insert (match-string 1 contents)))
+        (message "No suggestions available")))))
+
+(define-key lean-mode-map (kbd "C-c a") 'lean-insert-suggestion)

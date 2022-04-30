@@ -60,6 +60,7 @@ in {
       epkg.magit-section
       epkg.s
       epkg.rust-mode
+      epkg.lean-mode
     ];
   };
 
@@ -215,7 +216,7 @@ in {
     pkgs.patchelf
     pkgs.pinentry
     pkgs.proot
-    pkgs.python
+    pkgs.python3
     pkgs.qemu
     pkgs.rlwrap
     pkgs.rtorrent
@@ -261,5 +262,8 @@ in {
     pkgs.jdk
     pkgs.elan
     (pkgs.lib.hiPrio pkgs.gambit)
+    pkgs.python3Packages.mathlibtools
+    pkgs.inotify-tools
+    pkgs.htop
   ];
 }
