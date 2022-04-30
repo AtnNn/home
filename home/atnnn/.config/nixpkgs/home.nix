@@ -6,6 +6,7 @@ let
     export NIX_PATH="${nix-path}"
     exec ${(import <home-manager> { inherit pkgs; }).home-manager}/bin/home-manager "$@"
   '';
+  # nixGL = (import (builtins.fetchTarball { url = "https://github.com/guibou/nixGL/tarball/main"; }) { inherit pkgs; }).nixGLIntel;
 in {
   home = {
     stateVersion = "20.09";
@@ -159,7 +160,8 @@ in {
           '';
         }
       ];
-      terminal = "${pkgs.alacritty}/bin/alacritty";
+      # terminal = "${pkgs.alacritty}/bin/alacritty";
+      terminal = "alacritty";
       window.hideEdgeBorders = "both";
       bars = [{
         position = "top";
@@ -182,6 +184,7 @@ in {
 
   home.packages = [
     home-manager-custom
+    # nixGL
     pkgs.autoconf
     pkgs.automake
     (pkgs.lib.hiPrio pkgs.coreutils)
@@ -265,5 +268,6 @@ in {
     pkgs.python3Packages.mathlibtools
     pkgs.inotify-tools
     pkgs.htop
+    # pkgs.alacritty
   ];
 }
