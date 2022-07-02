@@ -1,11 +1,9 @@
-{ ... }:
-let
-  pkgs = import (fetchTarball "https://nixos.org/channels/nixos-unstable/nixexprs.tar.xz") {};
-in {
+{ pkgs, ... }:
+{
   imports = [ ./hardware-configuration.nix ];
 
-  system.stateVersion = "21.05";
-  
+  system.stateVersion = "22.05";
+
   boot.loader.grub = {
     enable = true;
     version = 2;
@@ -59,7 +57,7 @@ in {
 
   users.users.atnnn = {
      isNormalUser = true;
-     extraGroups = [ "wheel" "networkmanager" "audio" "docker" ]; # Enable ‘sudo’ for the user. 
+     extraGroups = [ "wheel" "networkmanager" "audio" "docker" ]; # Enable ‘sudo’ for the user.
   };
 
   environment.systemPackages = with pkgs; [
@@ -123,7 +121,6 @@ in {
       # xdg-desktop-portal-wlr
       xdg-desktop-portal-gtk
     ];
-    gtkUsePortal = true;
   };
   nix = {
     autoOptimiseStore = true;

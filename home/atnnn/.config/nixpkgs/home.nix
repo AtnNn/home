@@ -62,6 +62,12 @@ in {
       epkg.s
       epkg.rust-mode
       epkg.lean-mode
+      epkg.cargo
+      epkg.cargo-mode
+      epkg.rust-auto-use
+      epkg.rustic
+      epkg.helm-lsp
+      epkg.svelte-mode
     ];
   };
 
@@ -160,8 +166,8 @@ in {
           '';
         }
       ];
-      # terminal = "${pkgs.alacritty}/bin/alacritty";
-      terminal = "alacritty";
+      terminal = "${pkgs.alacritty}/bin/alacritty";
+      # terminal = "alacritty";
       window.hideEdgeBorders = "both";
       bars = [{
         position = "top";
@@ -268,6 +274,8 @@ in {
     pkgs.python3Packages.mathlibtools
     pkgs.inotify-tools
     pkgs.htop
-    # pkgs.alacritty
+    pkgs.alacritty
+    pkgs.rust-analyzer
+    pkgs.wl-clipboard
   ];
 }
