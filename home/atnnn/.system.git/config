@@ -3,8 +3,4 @@
 	filemode = true
 	worktree = /
 [remote "origin"]
-	url = git@github.com:atnnn/home
-	fetch = +refs/heads/*:refs/remotes/origin/*
-[branch "circus"]
-	remote = origin
-	merge = refs/heads/circus
+	url = git@github.com:AtnNn/home
