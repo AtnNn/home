@@ -74,8 +74,21 @@
   # List packages installed in system profile. To search, run:
   # $ nix search wget
   environment.systemPackages = with pkgs; [
-    vim # Do not forget to add an editor to edit configuration.nix! The Nano editor is also installed by default.
+    vim
     wget
+    file
+    git
+    htop
+    ncdu
+    sudo
+    which
+    python3
+    coreutils
+    utillinux
+    screen
+    gnupg
+    man man-pages stdmanpages
+    curl
   ];
 
   # Some programs need SUID wrappers, can be configured further or are
@@ -91,11 +104,10 @@
   # Enable the OpenSSH daemon.
   services.openssh.enable = true;
 
-  # Open ports in the firewall.
-  # networking.firewall.allowedTCPPorts = [ ... ];
-  # networking.firewall.allowedUDPPorts = [ ... ];
-  # Or disable the firewall altogether.
-  # networking.firewall.enable = false;
+  networking.firewall = {
+    enable = true;
+    allowPing = true;
+  };
 
   # Copy the NixOS configuration file and link it from the resulting system
   # (/run/current-system/configuration.nix). This is useful in case you
@@ -112,5 +124,16 @@
 
   networking.usePredictableInterfaceNames = false;
   networking.interfaces.eth0.useDHCP = true;
-}
 
+  nixpkgs.config = {
+    allowUnfree = true;
+  };
+
+  nix.extraOptions = ''
+    experimental-features = nix-command flakes recursive-nix
+  '';
+
+  nix.gc.automatic = true;
+
+  services.fail2ban.enable = true;
+}

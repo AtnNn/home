@@ -4,3 +4,6 @@
 	worktree = /
 [remote "origin"]
 	url = git@github.com:AtnNn/home
+[branch "circus"]
+	remote = origin
+	merge = refs/heads/circus
