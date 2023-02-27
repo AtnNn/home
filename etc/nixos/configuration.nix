@@ -16,7 +16,7 @@
     networkmanager.enable = true;
     interfaces.enp0s25.useDHCP = true;
     interfaces.wlp3s0.useDHCP = true;
-    firewall.allowedTCPPorts = [ 22 ];
+    firewall.allowedTCPPorts = [ 22 32400 4444 ];
   };
 
   i18n.defaultLocale = "en_US.UTF-8";
@@ -123,11 +123,14 @@
     ];
   };
   nix = {
-    autoOptimiseStore = true;
     gc = {
       automatic = true;
       dates = "weekly";
       options = "--delete-older-than 30d";
+    };
+    settings = {
+      auto-optimise-store = true;
+      trusted-substituters = [ "https://lean4.cachix.org/" ];
     };
   };
   services.printing = {

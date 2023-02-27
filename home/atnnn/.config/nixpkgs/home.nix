@@ -6,10 +6,9 @@ let
     export NIX_PATH="${nix-path}"
     exec ${(import <home-manager> { inherit pkgs; }).home-manager}/bin/home-manager "$@"
   '';
-  # nixGL = (import (builtins.fetchTarball { url = "https://github.com/guibou/nixGL/tarball/main"; }) { inherit pkgs; }).nixGLIntel;
 in {
   home = {
-    stateVersion = "20.09";
+    stateVersion = "22.11";
     username = "atnnn";
     homeDirectory = "/home/atnnn";
     sessionVariables = {
@@ -68,6 +67,8 @@ in {
       epkg.rustic
       epkg.helm-lsp
       epkg.svelte-mode
+      epkg.cmake-mode
+      epkg.lsp-treemacs
     ];
   };
 
@@ -116,17 +117,15 @@ in {
       modules-left = ["sway/workspaces"];
       modules-center = ["sway/window" "sway/mode"];
       modules-right = ["tray" "bluetooth" "pulseaudio" "battery" "clock"];
-      modules = {
-        battery = {
-          format = "{capacity}% {time}";
-          format-time = "{H}:{M}";
-        };
-        tray = {
-          show-passive-items = true;
-        };
-        pulseaudio = {
-          on-click = "pavucontrol";
-        };
+      battery = {
+        format = "{capacity}% {time}";
+        format-time = "{H}:{M}";
+      };
+      tray = {
+        show-passive-items = true;
+      };
+      pulseaudio = {
+        on-click = "pavucontrol";
       };
     }];
   };
@@ -265,7 +264,7 @@ in {
     pkgs.pkg-config
     pkgs.spirv-tools
     pkgs.rust-analyzer
-    pkgs.zathura
+    # pkgs.zathura -- build broken
     pkgs.grim
     pkgs.slurp
     pkgs.jdk
@@ -277,5 +276,11 @@ in {
     pkgs.alacritty
     pkgs.rust-analyzer
     pkgs.wl-clipboard
+    pkgs.pstree
+    pkgs.emscripten
+    # pkgs.unity3d
+    pkgs.blueman
+    pkgs.zathura
+    pkgs.ncdu
   ];
 }

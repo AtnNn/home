@@ -4,9 +4,6 @@
 (load custom-file)
 
 ;; Emacs look
-(setq default-frame-alist
-      '((font . "DejaVu Sans-10")))
-
 (setq-default scroll-bar-mode 0)
 (setq-default tool-bar-mode 0)
 (setq-default scroll-bar-mode 0)
@@ -43,8 +40,6 @@
 ;;; Packages
 (require 'package)
 (add-to-list 'package-archives '("gnu" . "https://elpa.gnu.org/packages/"))
-;(add-to-list 'package-archives '("marmalade" . "http://marmalade-repo.org/packages/"))
-;(add-to-list 'package-archives '("melpa" . "http://melpa.milkbox.net/packages/"))
 (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/"))
 (package-initialize)
 
@@ -70,40 +65,6 @@
 ;(require 'lean-mode)
 ;(require 'helm-lean)
 
-(add-to-list 'load-path "~/code/lean4/lean4-mode/")
-(require 'lean4-mode)
-
-;; (custom-set-variables
-;;  ;; custom-set-variables was added by Custom.
-;;  ;; If you edit it by hand, you could mess it up, so be careful.
-;;  ;; Your init file should contain only one such instance.
-;;  ;; If there is more than one, they won't work right.
-;;  '(lean-executable-name "/home/atnnn/.elan/toolchains/nightly/bin/lean")
-;;  '(lean-extra-arguments (quote ("-j" "11" "--profile")))
-;;  '(lean-memory-limit 12000)
-;;  '(lean-message-boxes-enabled-captions
-;;    (quote
-;;     ("check result" "eval result" "print result" "reduce result" "trace output")))
-;;  '(lean-message-boxes-enabledp t)
-;;  '(lean-rootdir "/home/atnnn/.elan/toolchains/nightly/")
-;;  '(lean-server-show-pending-tasks t)
-;;  '(lean-show-type-add-to-kill-ring t)
-;;  '(lean-timeout-limit 1000000)
-;;  '(menu-bar-mode nil)
-;;  '(package-archives
-;;    (quote
-;;     (("gnu" . "https://elpa.gnu.org/packages/")
-;;      ("melpa" . "http://melpa.org/packages/"))))
-;;  '(package-selected-packages
-;;    (quote
-;;     (cl-libify helm-xref helm json-mode magit nix-mode darkroom))))
-;; (custom-set-faces
-;;  ;; custom-set-faces was added by Custom.
-;;  ;; If you edit it by hand, you could mess it up, so be careful.
-;;  ;; Your init file should contain only one such instance.
-;;  ;; If there is more than one, they won't work right.
-;;  '(lean-server-task-face ((t (:slant italic))) t))
-
 ; @begin(65173798)@ - Do not edit these lines - added automatically!
 (if (file-exists-p "/home/atnnn/code/ciao/ciao_emacs/elisp/ciao-site-file.el")
   (load-file "/home/atnnn/code/ciao/ciao_emacs/elisp/ciao-site-file.el"))
@@ -124,16 +85,40 @@
 (dir-locals-set-directory-class "/" 'non-editable)
 (dir-locals-set-directory-class "/home/atnnn" 'editable)
 
+(setq lsp-keymap-prefix "C-c l")
+(require 'lsp-mode)
+
+;(let ((quail-current-package (assoc "Lean" quail-package-alist)))
+;  (quail-defrule "\\=" ["＝"]))
+
+;; (defun lean-insert-suggestion ()
+;;   (interactive)
+;;   (let ((contents (with-current-buffer "*Lean Next Error*" (buffer-string))))
+;;     (save-match-data
+;;       (if (string-match "Try this: \\(.*\\)" contents)
+;;           (save-excursion
+;;             (insert (match-string 1 contents)))
+;;         (message "No suggestions available")))))
+
+;(define-key lean-mode-map (kbd "C-c a") 'lean-insert-suggestion)
+
+(define-key projectile-mode-map (kbd "C-c p") 'projectile-command-map)
+
+(setq load-path (cons "~/code/lean4-mode" load-path))
+(load "lean4-mode")
+
+(define-key lean4-mode-map (kbd "C-c l") lsp-command-map)
+
+
 (defun pretty-symbol-delimit-p (left right)
   (or (not (eq left right))
       (memq left '(?. ?( ?)))))
-
 (defun custom-psdcp (start end _match)
-    "Return true iff the symbol MATCH should be composed.
+  "Return true iff the symbol MATCH should be composed.
 The symbol starts at position START and ends at position END.
 This is the default for `prettify-symbols-compose-predicate'
 which is suitable for most programming languages such as C or Lisp."
-    ;; Check that the chars should really be composed into a symbol.
+  ;; Check that the chars should really be composed into a symbol.
     (and
      (pretty-symbol-delimit-p
       (char-syntax (or (char-before start) ?\s))
@@ -141,78 +126,70 @@ which is suitable for most programming languages such as C or Lisp."
      (pretty-symbol-delimit-p
       (char-syntax (char-before end))
       (char-syntax (or (char-after start) ?\s)))
-          (not (nth 8 (syntax-ppss)))))
+     (not (nth 8 (syntax-ppss)))))
+(setq c-mode-common-hook nil)
+(add-hook 'c-mode-common-hook
+          (lambda ()
+            (setq prettify-symbols-compose-predicate #'custom-psdcp)
+            (setq prettify-symbols-alist '(
+                                           ("->" . ?→)
+                                           ("exists" . ?∃)
+                                           ("<=" . ?≤)
+                                           (">=" . ?≥)
+                                           ("==" . ?≡)
+                                           ("!" . ?¬)
+                                           ("!=" . ?≢)
+                                           ("&&" . ?⋀)
+                                           ("||" . ?⋁)
+                                           ("true" . ?⊤)
+                                           ("false" . ?⊥)
+                                           ("bool" . ?𝔹)
+                                           ("nullptr" . ?∅)
+                                           (">>" . ?≫)
+                                           ("<<" . ?≪)
+                                           ("<<<" . ?⋘)
+                                           (">>>" . ?⋙)
+                                           ("[0]" . ?₀)
+                                           ("[1]" . ?₁)
+                                           ("[2]" . ?₂)
+                                           ("[3]" . ?₃)
+                                           ("[4]" . ?₄)
+                                           ("[n]" . ?ₙ)
+                                           ("[i]" . ?ᵢ)
+                                           ("[j]" . ?ⱼ)
+                                           ("[k]" . ?ₖ)
+                                           ("[&]" . ?λ)
+                                           ("..." . ?…)
+                                           (" * " . ?∙) ; or · ⨯ ⨱ ✕
+                                           ("*" . ?∗) ; or ⁎
+                                           ("**" . ?⁑)
+                                           ("()" . ?≬)
+                                           ("(;;)" . ?∞)
+                                           ("=" . ?⇇) ; or  ＝
+                                           ("auto" . ?∵)
+                                           ("return" . ?∎)
+                                           ("&" . ?§)
+                                           (" & " . ?⨃)
+                                           (" | " . ?⩀)
+                                           (" ^ " . ?⊕)
+                                           ;(";" . ?⸳)
+                                           ("{" . ?⸢)
+                                           ("}" . ?⸥)
+                                           ("goto" . ?⎌)
+                                           ("i" . ?ꙇ)
+                                           ("if" . ?⎇)
+                                           ("else" . ?⌥)
+                                           ("#include" . ?⭅)
+                                           ))))
 
-(add-hook
- 'c-mode-common-hook
- (lambda ()
-   (setq prettify-symbols-compose-predicate #'custom-psdcp)
-   (setq
-    prettify-symbols-alist
-    '(
-      ("->" . ?→)
-      ("exists" . ?∃)
-      ("<=" . ?≤)
-      (">=" . ?≥)
-      ("==" . ?≡)
-      ("!" . ?¬)
-      ("!=" . ?≢)
-      ("&&" . ?⋀)
-      ("||" . ?⋁)
-      ("true" . ?⊤)
-      ("false" . ?⊥)
-      ("bool" . ?𝔹)
-      ("nullptr" . ?∅)
-      (">>" . ?≫)
-      ("<<" . ?≪)
-      ("<<<" . ?⋘)
-      (">>>" . ?⋙)
-      ("[0]" . ?₀)
-      ("[1]" . ?₁)
-      ("[2]" . ?₂)
-      ("[3]" . ?₃)
-      ("[4]" . ?₄)
-      ("[n]" . ?ₙ)
-      ("[i]" . ?ᵢ)
-      ("[j]" . ?ⱼ)
-      ("[k]" . ?ₖ)
-      ("[&]" . ?λ)
-      ("..." . ?…)
-      (" * " . ?∙) ; or · ⨯ ⨱ ✕
-      ("*" . ?∗) ; or ⁎
-      ("**" . ?⁑)
-      ("()" . ?≬)
-      ("(;;)" . ?∞)
-      ("=" . ?⇇) ; or  ＝
-      ("auto" . ?∵)
-      ("return" . ?∎)
-      ("&" . ?§)
-      ;(" & " . ?⨃)
-      ;(" | " . ?⩀)
-      (" ^ " . ?⊕)
-      (";" . ?⸳)
-      ("{" . ?⸢)
-      ("}" . ?⸥)
-      ("goto" . ?⎌)
-      ("i" . ?ꙇ)
-      ("if" . ?⎇)
-      ("else" . ?⌥)
-      ;("#include" . ?⭅)
-      ))))
+(projectile-mode +1)
+(define-key projectile-mode-map (kbd "C-c p") 'projectile-command-map)
 
-;(setq lsp-keymap-prefix "C-c l")
-(define-key lsp-mode-map (kbd "C-c l") lsp-command-map)
+(setq completion-styles '(flex))
 
-(let ((quail-current-package (assoc "Lean" quail-package-alist)))
-  (quail-defrule "\\=" ["＝"]))
+(add-hook 'c-mode-common-hook 'variable-pitch-mode)
+(add-hook 'nix-mode-hook 'variable-pitch-mode)
 
-(defun lean-insert-suggestion ()
-  (interactive)
-  (let ((contents (with-current-buffer "*Lean Next Error*" (buffer-string))))
-    (save-match-data
-      (if (string-match "Try this: \\(.*\\)" contents)
-          (save-excursion
-            (insert (match-string 1 contents)))
-        (message "No suggestions available")))))
-
-(define-key lean-mode-map (kbd "C-c a") 'lean-insert-suggestion)
+(setf
+ (alist-get 'nix-build compilation-error-regexp-alist-alist)
+ '("^ *at \\([^:]+\\):\\([0-9]+\\):\\([0-9]+\\):$" 1 2 3))
