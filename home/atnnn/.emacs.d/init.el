@@ -193,3 +193,5 @@ which is suitable for most programming languages such as C or Lisp."
 (setf
  (alist-get 'nix-build compilation-error-regexp-alist-alist)
  '("^ *at \\([^:]+\\):\\([0-9]+\\):\\([0-9]+\\):$" 1 2 3))
+
+(setq ediff-window-setup-function #'ediff-setup-windows-plain)

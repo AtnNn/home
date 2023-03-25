@@ -34,6 +34,9 @@
    "/home/atnnn/.elan/toolchains/leanprover--lean4---nightly-2022-01-06/lib/lean")
  '(lsp-keymap-prefix "C-c l")
  '(lsp-rust-analyzer-server-display-inlay-hints t)
+ '(magit-refresh-status-buffer nil)
+ '(magit-status-sections-hook
+   '(magit-insert-status-headers magit-insert-merge-log magit-insert-rebase-sequence magit-insert-am-sequence magit-insert-sequencer-sequence magit-insert-bisect-output magit-insert-bisect-rest magit-insert-bisect-log magit-insert-untracked-files magit-insert-unstaged-changes magit-insert-stashes magit-insert-unpushed-to-pushremote magit-insert-unpushed-to-upstream-or-recent magit-insert-unpulled-from-pushremote magit-insert-unpulled-from-upstream))
  '(menu-bar-mode nil)
  '(package-archives
    '(("gnu" . "https://elpa.gnu.org/packages/")

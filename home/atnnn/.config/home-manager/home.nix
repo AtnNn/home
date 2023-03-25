@@ -13,6 +13,7 @@ in {
     homeDirectory = "/home/atnnn";
     sessionVariables = {
       NIX_PATH = nix-path;
+      EDITOR = "${pkgs.vim}/bin/vim";
     };
     sessionPath = [ "~/.local/bin" ];
   };
@@ -100,7 +101,7 @@ in {
   };
 
   home.file = {
-    ".config/nixpkgs/home.nix.current".source = ./home.nix;
+    ".config/home-manager/home.nix.current".source = ./home.nix;
     ".config/nixpkgs/config.nix".text = ''
       builtins.fromJSON ${pkgs.lib.strings.escapeNixString (builtins.toJSON config.nixpkgs.config)}
     '';
@@ -194,10 +195,10 @@ in {
     pkgs.automake
     (pkgs.lib.hiPrio pkgs.coreutils)
     pkgs.binutils
-    pkgs.cabal-install
+    # pkgs.cabal-install
     pkgs.cmake
-    pkgs.cppcheck
-    pkgs.exercism
+    # pkgs.cppcheck
+    # pkgs.exercism
     (pkgs.lib.hiPrio pkgs.gcc)
     pkgs.clang
     pkgs.clang-tools
@@ -205,11 +206,11 @@ in {
     pkgs.gnugrep
     pkgs.gnumake
     pkgs.gnupg
-    pkgs.go
+    # pkgs.go
     pkgs.graphviz
     pkgs.iftop
     pkgs.imagemagick
-    pkgs.isabelle
+    # pkgs.isabelle
     pkgs.jq
     # pkgs.lean
     pkgs.less
@@ -218,7 +219,6 @@ in {
     pkgs.ninja
     (pkgs.lib.hiPrio pkgs.nixUnstable)
     pkgs.nodejs
-    pkgs.openbox
     pkgs.p7zip
     pkgs.pandoc
     pkgs.patchelf
@@ -233,22 +233,22 @@ in {
     pkgs.sqlite
     pkgs.swiProlog
     pkgs.tigervnc
-    pkgs.texlive.combined.scheme-full
-    pkgs.haskellPackages.warp
+    # pkgs.texlive.combined.scheme-full
+    # pkgs.haskellPackages.warp
     pkgs.whois
     pkgs.xterm
     pkgs.gdb
     pkgs.gprolog
-    pkgs.wineWowPackages.full
+    # pkgs.wineWowPackages.full
     pkgs.wasm-pack
-    pkgs.cargo-generate
+    # pkgs.cargo-generate
     pkgs.nodePackages.npm
-    (pkgs.rust-bin.stable.latest.default.override {
-      targets = [
-        "x86_64-unknown-linux-gnu"
-        "wasm32-unknown-unknown"
-      ];
-    })
+    # (pkgs.rust-bin.stable.latest.default.override {
+    #   targets = [
+    #     "x86_64-unknown-linux-gnu"
+    #     "wasm32-unknown-unknown"
+    #   ];
+    # })
     pkgs.llvmPackages_latest.llvm
     pkgs.llvmPackages_latest.bintools
     # pkgs.rustup
@@ -262,19 +262,18 @@ in {
     pkgs.playerctl
     pkgs.pavucontrol
     pkgs.pkg-config
-    pkgs.spirv-tools
-    pkgs.rust-analyzer
+    # pkgs.spirv-tools
+    # pkgs.rust-analyzer
     # pkgs.zathura -- build broken
     pkgs.grim
     pkgs.slurp
     pkgs.jdk
     pkgs.elan
-    (pkgs.lib.hiPrio pkgs.gambit)
-    pkgs.python3Packages.mathlibtools
+    # (pkgs.lib.hiPrio pkgs.gambit)
+    # pkgs.python3Packages.mathlibtools
     pkgs.inotify-tools
     pkgs.htop
     pkgs.alacritty
-    pkgs.rust-analyzer
     pkgs.wl-clipboard
     pkgs.pstree
     pkgs.emscripten
@@ -282,5 +281,7 @@ in {
     pkgs.blueman
     pkgs.zathura
     pkgs.ncdu
+    pkgs.nix-diff
+    pkgs.unzip
   ];
 }
