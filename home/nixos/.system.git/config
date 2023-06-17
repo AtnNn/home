@@ -8,3 +8,6 @@
 [branch "puck"]
 	remote = origin
 	merge = refs/heads/puck
+[branch "hive"]
+	remote = origin
+	merge = refs/heads/hive
