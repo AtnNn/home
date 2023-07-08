@@ -1,8 +1,19 @@
-{ pkgs ? import <nixpkgs> { config.allowUnfree = true; }
+{ pkgs ? import <nixpkgs> {}
 }:
 
 {
-  inherit (pkgs) vim htop file git;
+  inherit (pkgs)
+    vim
+    htop
+    file
+    git
+    man
+    nodejs
+    emscripten
+    python3
+    wget
+    nixpkgs-review
+    nix-diff;
 
   emacs = pkgs.emacsWithPackages (epkg: [
       epkg.flycheck

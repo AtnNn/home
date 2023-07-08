@@ -48,7 +48,7 @@
 
 ;;; highlight-sexp highlight-symbol rainbow-delimiters highlight-tail
 
-(require 'helm-config)
+;(require 'helm-config)
 (global-set-key (kbd "M-x") 'helm-M-x)
 (global-set-key (kbd "C-x C-f") 'helm-find-files)
 (global-set-key (kbd "C-x C-g") 'helm-ls-git-ls)
@@ -82,7 +82,7 @@
            (show-trailing-whitespace . t)))))
 
 (dir-locals-set-directory-class "/" 'non-editable)
-(dir-locals-set-directory-class "/home/atnnn" 'editable)
+(dir-locals-set-directory-class "/home/nixos" 'editable)
 
 (setq lsp-keymap-prefix "C-c l")
 (require 'lsp-mode)
@@ -103,10 +103,10 @@
 
 (define-key projectile-mode-map (kbd "C-c p") 'projectile-command-map)
 
-(setq load-path (cons "~/code/lean4-mode" load-path))
-(load "lean4-mode")
+;; (setq load-path (cons "~/code/lean4-mode" load-path))
+;; (load "lean4-mode")
 
-(define-key lean4-mode-map (kbd "C-c l") lsp-command-map)
+;; (define-key lean4-mode-map (kbd "C-c l") lsp-command-map)
 
 
 (defun pretty-symbol-delimit-p (left right)
@@ -192,3 +192,6 @@ which is suitable for most programming languages such as C or Lisp."
 (setf
  (alist-get 'nix-build compilation-error-regexp-alist-alist)
  '("^ *at \\([^:]+\\):\\([0-9]+\\):\\([0-9]+\\):$" 1 2 3))
+
+;; Emacs in WSL + X freezes, error message suggests:
+(setq x-select-enable-clipboard-manager nil)
