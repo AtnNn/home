@@ -1,8 +1,4 @@
-{ ... }:
-
-let
-pkgs = import (fetchTarball "https://nixos.org/channels/nixos-21.05/nixexprs.tar.xz") {};
-in
+{ pkgs, ... }:
 
 {
   imports =
@@ -11,14 +7,13 @@ in
     ];
 
   boot.loader.grub.enable = true;
-  boot.loader.grub.version = 2;
   boot.loader.grub.devices = [ "/dev/sda" "/dev/sdb" ]; # or "nodev" for efi only
 
   networking.hostName = "thanos"; # Define your hostname.
 
   networking.firewall = {
     enable = true;
-    allowedTCPPorts = [ 22 443 80 3000 4000 4444 4321 4567];
+    allowedTCPPorts = [ 22 443 80 3000 4000 4444 4321 4567 4242 ];
     allowPing = true;
   };
 
@@ -38,7 +33,7 @@ in
     listenAddresses = [
       { addr = "0.0.0.0"; port = 22; }
     ];
-    forwardX11 = true;
+    settings.X11Forwarding = true;
   };
 
   users.extraUsers.atnnn = {
@@ -50,7 +45,7 @@ in
     isNormalUser = true;
   };
 
-  system.stateVersion = "19.03";
+  system.stateVersion = "23.05";
 
   virtualisation.docker.enable = true;
   virtualisation.virtualbox.host.enable = true;
@@ -60,16 +55,14 @@ in
   };
 
   nix = {
-    package = pkgs.nixUnstable;
-    useSandbox = "relaxed";
-    sandboxPaths = [ "/home/nix/ccache" ];
-    binaryCaches = [ "https://cache.nixos.org/" ];
-    buildCores = 12;
-    maxJobs = 3;
-    trustedUsers = [ "@wheel" ];
+    # useSandbox = "relaxed";
+    # sandboxPaths = [ "/home/nix/ccache" ];
+    settings.auto-optimise-store = true;    
+    settings.substituters = [ "https://cache.nixos.org/" ];
+    settings.cores = 12;
+    # maxJobs = 3;
+    settings.trusted-users = [ "@wheel" ];
     extraOptions = ''
-      auto-optimise-store = true
-      experimental-features = nix-command flakes recursive-nix ca-derivation
       trusted-substituters = https://lean4.cachix.org/
       trusted-public-keys = cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY= lean4.cachix.org-1:mawtxSxcaiWE24xCXXgh3qnvlTkyU7evRRnGeAhD4Wk=
     '';
@@ -113,9 +106,9 @@ in
     recommendedGzipSettings = true;
     recommendedProxySettings = true;
     virtualHosts."thanos.atnnn.com" = {
-      forceSSL = true;
-      extraConfig = "access_log /var/log/nginx.log;";
-      enableACME = true;
+      forceSSL = false;
+      # extraConfig = "access_log /var/log/nginx.log;"; # TODO ATN
+      enableACME = false;
       locations = {
         "/".proxyPass = "http://localhost:3000";
         "/downloads/" = {
@@ -135,18 +128,16 @@ in
     # };
   };
 
-  security.acme.certs."thanos.atnnn.com" = {
-    postRun = "systemctl reload nginx.service";
-    email = "etienne@atnnn.com";
-  };
+  security.acme.defaults.email = "etienne@atnnn.com";
+  security.acme.acceptTerms = true;
 
-  programs.ssh.extraConfig = ''
-    StrictHostKeyChecking no
-  '';
+  # programs.ssh.extraConfig = ''
+  #  StrictHostKeyChecking no
+  # '';
 
   services.fail2ban.enable = true;
 
-  security.sudo.wheelNeedsPassword = false;
+  security.sudo.wheelNeedsPassword = true;
 
   programs.gnupg.agent.enable = true;
 
@@ -154,5 +145,29 @@ in
     enable = true;
     freeMemThreshold = 1;
     freeSwapThreshold = 50; 
+  };
+
+  system.autoUpgrade.enable = true;
+
+  services.nebula.networks.atnnn = {
+    enable = true;
+    lighthouses = [ "10.85.0.3" ];
+    staticHostMap = { "10.85.0.3" = [ "circus.atnnn.com:4242" ]; };
+    relays = [ "10.85.0.3" ];
+    key = "/etc/nebula/thanos.key";
+    cert = "/etc/nebula/thanos.crt";
+    ca = "/etc/nebula/ca.crt";
+    isRelay = true;
+    isLighthouse = true;
+    firewall.inbound = [{
+      host = "any";
+      port = "any";
+      proto = "any";
+    }];
+    firewall.outbound = [{
+      host = "any";
+      port = "any";
+      proto = "any";
+    }];
   };
 }
