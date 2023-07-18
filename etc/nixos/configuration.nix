@@ -6,7 +6,6 @@
 
   boot.loader.grub = {
     enable = true;
-    version = 2;
     useOSProber = true;
     device = "/dev/sda";
   };
@@ -140,6 +139,28 @@
   services.avahi = {
     enable = true;
     nssmdns = true;
+  };
+  services.nebula.networks.atnnn = {
+    enable = true;
+    lighthouses = [ "10.85.0.3" "10.85.0.4" ];
+    staticHostMap = {
+      "10.85.0.3" = [ "circus.atnnn.com:4242" ];
+      "10.85.0.4" = [ "thanos.atnnn.com:4242" ];
+    };
+    relays = [ "10.85.0.3" "10.85.0.4" ];
+    key = "/etc/nebula/puck.key";
+    cert = "/etc/nebula/puck.crt";
+    ca = "/etc/nebula/ca.crt";
+    firewall.inbound = [{
+      host = "any";
+      port = "any";
+      proto = "any";
+    }];
+    firewall.outbound = [{
+      host = "any";
+      port = "any";
+      proto = "any";
+    }];
   };
 }
 

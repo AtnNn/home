@@ -276,7 +276,7 @@ in {
     pkgs.alacritty
     pkgs.wl-clipboard
     pkgs.pstree
-    pkgs.emscripten
+    # pkgs.emscripten
     # pkgs.unity3d
     pkgs.blueman
     pkgs.zathura
