@@ -84,8 +84,8 @@
     notificationSender = "etienne@atnnn.com";
     minimumDiskFree = 5;
     extraConfig = ''
-      max_output_size = 2147483647;
     '';
+    useSubstitutes = true;
     buildMachinesFiles = [ (
       builtins.toFile "hydra-build-machines" ''
         localhost x86_64-linux,i686-linux - 3 1 kvm
@@ -105,10 +105,10 @@
     recommendedTlsSettings = true;
     recommendedGzipSettings = true;
     recommendedProxySettings = true;
-    virtualHosts."thanos.atnnn.com" = {
-      forceSSL = false;
+    virtualHosts."hydra.atnnn.com" = {
+      forceSSL = true;
       # extraConfig = "access_log /var/log/nginx.log;"; # TODO ATN
-      enableACME = false;
+      enableACME = true;
       locations = {
         "/".proxyPass = "http://localhost:3000";
         "/downloads/" = {
