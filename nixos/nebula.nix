@@ -6,7 +6,7 @@ nebula = import ../nebula.nix { inherit lib; };
 host = nebula.hosts.${config.atnnn-mesh.name};
 
 in {
-  config.services.nebula.networks.atnnn = (fix self: {
+  config.services.nebula.networks.atnnn = fix (self: {
     lighthouses = remove host.ip nebula.lighthouses;
     staticHostMap = nebula.staticHostMap;
     relays = self.lighthouses;

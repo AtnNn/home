@@ -18,7 +18,7 @@ in {
     enable = mkEnableOption "AtnNn mesh device";
 
     name = mkOption {
-      type = types.string;
+      type = types.str;
       description = mdDoc "hostname and machine identifier";
     };
 
@@ -35,12 +35,12 @@ in {
 
   config = mkMerge [{
 
-    mesh.enable = mkDefault (
+    atnnn-mesh.enable = mkDefault (
       mesh.profile.server ||
       mesh.profile.desktop ||
       mesh.profile.laptop ||
       mesh.profile.wsl ||
-      mesh.profile.minimal);
+      mesh.profile.extras);
 
   } (mkIf mesh.enable {
 
@@ -127,22 +127,13 @@ in {
 
   }) (mkIf workstation {
 
-    location = locations.mesa_AZ;
+    location = mesa_AZ;
 
     hardware.opengl.enable = true;
 
     sound.enable = true;
 
     services.pipewire.enable = true;
-
-    fonts = mkIf workstation {
-      enableDefaultFonts = true;
-      fontDir.enable = true;
-      fonts = with pkgs; [
-        dejavu_fonts freefont_ttf unifont unifont_upper
-        font-awesome noto-fonts noto-fonts-emoji
-      ];
-    };
 
     services.printing = {
       enable = true;
@@ -183,6 +174,15 @@ in {
   }) (mkIf mesh.profile.extras {
 
     virtualisation.docker.enable = true;
+
+    fonts = {
+      enableDefaultFonts = true;
+      fontDir.enable = true;
+      fonts = with pkgs; [
+        dejavu_fonts freefont_ttf unifont unifont_upper
+        font-awesome noto-fonts noto-fonts-emoji
+      ];
+    };
 
   })];
 }

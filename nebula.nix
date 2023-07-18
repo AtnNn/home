@@ -2,7 +2,7 @@
 with lib; let
 
 make-hosts = mapAttrs (name: host: host // {
-  ip = "10.85.0.${host.id}";
+  ip = "10.85.0.${toString host.id}";
   crt = ./nebula/${name}.crt;
   lighthouse = host.lighthouse or false;
 });
@@ -30,7 +30,7 @@ in fix (self: {
     };
   };
 
-  lighthouses = map (host: host.ip) (filter (host: host.lighthouse) attrValues self.hosts);
+  lighthouses = map (host: host.ip) (filter (host: host.lighthouse) (attrValues self.hosts));
 
-  staticHostMap = concatMapAttrs (name: host: { ${host.ip}: [ "${name}.atnnn.com:4242" ]; }) self.hosts;
+  staticHostMap = concatMapAttrs (name: host: if host.lighthouse then { "${host.ip}" = [ "${name}.atnnn.com:4242" ]; } else {}) self.hosts;
 })
