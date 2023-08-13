@@ -136,4 +136,22 @@
   nix.gc.automatic = true;
 
   services.fail2ban.enable = true;
+
+  system.autoUpgrade.enable = true;
+
+  services.journalwatch = {
+    enable = true;
+    mailTo = "etienne@atnnn.com";
+    priority = 5;
+  };
+
+  services.postfix = {
+    enable = true;
+    domain = "circus.atnnn.com";
+    hostname = "circus.atnnn.com";
+    virtual = "@circus.atnnn.com etienne@atnnn.com";
+    extraConfig = ''
+      inet_interfaces = loopback-only
+    '';
+  };
 }
