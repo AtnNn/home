@@ -98,6 +98,26 @@ in {
       enable = true;
       mailTo = "etienne@atnnn.com";
       priority = 4; # warning
+      filterBlocks = [{
+        match = "SYSLOG_IDENTIFIER = sshd";
+        filters = ''
+          fatal: Timeout before authentication for [^ ]+ port \d+
+          error: PAM: Authentication failure .*
+          error: kex_exchange_identification: .*
+          pam_unix(sshd:auth): check pass; user unknown
+          pam_unix(sshd:auth): authentication failure; .*
+        '';
+      } {
+        match = "SYSLOG_IDENTIFIER = dhcpcd";
+        filters = ''
+          eth0: failed to renew DHCP, rebinding
+        '';
+      } {
+        match = "SYSLOG_IDENTIFIER = fail2ban";
+        filters = ''
+          NOTICE [sshd] (Ban|Unban) [^ ]+
+        '';
+      }];
     };
 
     services.postfix = {
