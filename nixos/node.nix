@@ -32,7 +32,7 @@ in {
     };
 
     networking = {
-      hostName = builtins.trace (builtins.toJSON host) host.name;
+      hostName = host.name;
       firewall = {
         enable = true;
         allowedTCPPorts = [ 22 ];
