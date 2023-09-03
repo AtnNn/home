@@ -95,7 +95,7 @@ in {
     services.journalwatch = {
       enable = true;
       mailTo = "etienne@atnnn.com";
-      priority = 5;
+      priority = 4; # warning
     };
 
     services.postfix = {
