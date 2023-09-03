@@ -36,7 +36,7 @@ in {
       firewall = {
         enable = true;
         allowedTCPPorts = [ 22 ];
-	allowPing = true;
+        allowPing = true;
       };
     };
 
@@ -60,6 +60,8 @@ in {
       screen
       ncdu
       file
+      sudo
+      which
     ];
 
     programs.mtr.enable = true;
@@ -198,6 +200,10 @@ in {
         font-awesome noto-fonts noto-fonts-emoji
       ];
     };
+
+    environment.systemPackages = with pkgs; [
+      man man-pages stdmanpages
+    ];
 
   })]);
 }
