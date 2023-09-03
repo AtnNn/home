@@ -4,7 +4,7 @@ nixpkgs-url = "https://github.com/NixOS/nixpkgs/archive/nixos-23.05.tar.gz";
 
 pkgs = import (builtins.fetchTarball {
   url = nixpkgs-url;
-  sha256 = builtins.readFile "./nixpkgs.sha256";
+  sha256 = builtins.substring 0 52 (builtins.readFile ./nixpkgs.sha256);
 }) {};
 
 mesh = {

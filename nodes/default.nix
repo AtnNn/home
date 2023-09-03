@@ -1,17 +1,17 @@
 { lib, shared, ... }@mesh:
 with lib; let
 
-make-nodes = mapAttrs (name: spec: let
+make-hosts = mapAttrs (name: spec: let
   f = import ./${name} mesh;
   attrs = spec // {
     ip = "10.85.0.${toString spec.id}";
     crt = ./nodes/${name}/nebula.crt;
     lighthouse = spec.lighthouse or false;
   };
-  in f attrs // attrs;
-});
+  in f attrs // attrs
+);
 
-in fix (self: {
+nodes = {
   ca = ./shared/nebula-ca.crt;
 
   hosts = make-hosts {
@@ -34,7 +34,11 @@ in fix (self: {
     };
   };
 
-  lighthouses = map (host: host.ip) (filter (host: host.lighthouse) (attrValues self.hosts));
+  lighthouses = map (host: host.ip) (filter (host: host.lighthouse) (attrValues nodes.hosts));
 
-  staticHostMap = concatMapAttrs (name: host: if host.lighthouse then { "${host.ip}" = [ "${name}.atnnn.com:4242" ]; } else {}) self.hosts;
-})
+  staticHostMap = concatMapAttrs (name: host:
+    if host.lighthouse then { "${host.ip}" = [ "${name}.atnnn.com:4242" ]; } else {}
+  ) nodes.hosts;
+};
+
+in nodes
