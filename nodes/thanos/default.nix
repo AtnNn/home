@@ -1,1 +1,3 @@
-mesh: spec: {}
+mesh: spec: {
+  lighthouse = true;
+}

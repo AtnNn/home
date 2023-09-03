@@ -1,37 +1,41 @@
 { lib, shared, ... }@mesh:
 with lib; let
 
-make-hosts = mapAttrs (name: spec: let
+defaults = {
+  lighthouse = false;
+};
+
+make-hosts = mapAttrs (name: id: let
   f = import ./${name} mesh;
-  attrs = spec // {
-    ip = "10.85.0.${toString spec.id}";
-    crt = ./nodes/${name}/nebula.crt;
-    lighthouse = spec.lighthouse or false;
+  attrs = {
+    inherit id name;
+    ip = "10.85.0.${toString id}";
+    crt = ./${name}/nebula.crt;
   };
-  in f attrs // attrs
-);
+  in defaults // attrs // f attrs);
+
+mkProfiles = profiles: {
+    server = false;
+    desktop = false;
+    laptop = false;
+    wsl = false;
+    extras = false;
+  } // profiles // {
+    workstation = profiles.laptop or false || profiles.desktop or false;
+    linuxWorkstation = (profiles.laptop or false || profiles.desktop or false) && ! profiles.wsl or false;
+  };
 
 nodes = {
-  ca = ./shared/nebula-ca.crt;
+  inherit mkProfiles;
+
+  ca = shared.nebula-ca;
 
   hosts = make-hosts {
-    stormtrooper = {
-      id = 2;
-    };
-    circus = {
-      id = 3;
-      lighthouse = true;
-    };
-    thanos = {
-      id = 4;
-      lighthouse = true;
-    };
-    piezzophone = {
-      id = 5;
-    };
-    puck = {
-      id = 6;
-    };
+    stormtrooper = 1;
+    circus = 3;
+    thanos = 4;
+    piezzophone = 5;
+    puck = 6;
   };
 
   lighthouses = map (host: host.ip) (filter (host: host.lighthouse) (attrValues nodes.hosts));
