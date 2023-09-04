@@ -76,6 +76,10 @@ in {
     services.fail2ban.enable = true;
 
     nix = {
+      nixPath = [
+        "nixpkgs=${mesh.nixpkgs}"
+      ];
+      channel.enable = false;
       gc = {
         automatic = true;
         dates = "weekly";
