@@ -3,12 +3,12 @@ with lib; let
 
 make-hosts = mapAttrs (name: host: host // {
   ip = "10.85.0.${toString host.id}";
-  crt = ./nebula/${name}.crt;
+  crt = ./nodes/${name}/nebula.crt;
   lighthouse = host.lighthouse or false;
 });
 
 in fix (self: {
-  ca = ./nebula/ca.crt;
+  ca = ./shared/nebula-ca.crt;
 
   hosts = make-hosts {
     stormtrooper = {

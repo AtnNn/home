@@ -1,20 +1,20 @@
-{ pkgs, config, lib, ... }:
-with lib; let
+mesh: { config, ... }:
 
-nebula = import ../nebula.nix { inherit lib; };
+with mesh.lib; let
 
-host = nebula.hosts.${config.atnnn-mesh.name};
+host = config.atnnn-mesh.host;
+
+lighthouses = remove host.ip mesh.nodes.lighthouses;
 
 in {
-  config.services.nebula.networks.atnnn = fix (self: {
-    lighthouses = remove host.ip nebula.lighthouses;
-    staticHostMap = nebula.staticHostMap;
-    relays = self.lighthouses;
+  config.services.nebula.networks.atnnn = {
+    staticHostMap = mesh.nodes.staticHostMap;
+    relays = lighthouses;
     isRelay = host.lighthouse;
     isLighthouse = host.lighthouse;
-    key = "/etc/nebula/${config.atnnn-mesh.name}.key";
+    key = "/etc/nebula/${host.name}.key";
     cert = host.crt;
-    ca = nebula.ca;
+    ca = mesh.nodes.ca;
     firewall.inbound = [{
       host = "any";
       port = "any";
@@ -25,5 +25,5 @@ in {
       port = "any";
       proto = "any";
     }];
-  });
+  };
 }

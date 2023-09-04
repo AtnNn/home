@@ -1,12 +1,8 @@
-{ pkgs, lib, config, ... }:
+mesh: { pkgs, lib, config, ... }:
 
 with lib; let
 
-mesh = config.atnnn-mesh;
-
-workstation = mesh.profile.laptop || mesh.profile.desktop;
-
-linuxWorkstation = workstation && ! mesh.profile.wsl;
+host = config.atnnn-mesh.host;
 
 mesa_AZ = {
   latitude = 33.4;
@@ -15,39 +11,36 @@ mesa_AZ = {
 
 in {
   options.atnnn-mesh = {
-    enable = mkEnableOption "AtnNn mesh device";
-
-    name = mkOption {
-      type = types.str;
+    host = mkOption {
+      type = types.anything;
       description = mdDoc "hostname and machine identifier";
+      default = null;
     };
-
-    profile.server = mkEnableOption "mesh server";
-    profile.desktop = mkEnableOption "desktop configuration";
-    profile.laptop = mkEnableOption "laptop configuraiton";
-    profile.wsl = mkEnableOption "WSL configuration";
-    profile.extras = mkEnableOption "extra packages and services";
   };
 
   imports = [
-    ./nebula.nix
+    mesh.modules.nebula
   ];
 
-  config = mkMerge [{
+  config = mkIf (host != null) (mkMerge [{
 
-    atnnn-mesh.enable = mkDefault (
-      mesh.profile.server ||
-      mesh.profile.desktop ||
-      mesh.profile.laptop ||
-      mesh.profile.wsl ||
-      mesh.profile.extras);
-
-  } (mkIf mesh.enable {
+    nixpkgs = {
+      pkgs = mesh.pkgs;
+      config = {
+        allowUnfree = true;
+      };
+    };
 
     networking = {
-      hostName = mesh.name;
-      firewall.allowedTCPPorts = [ 22 ];
+      hostName = host.name;
+      firewall = {
+        enable = true;
+        allowedTCPPorts = [ 22 ];
+        allowPing = true;
+      };
     };
+
+    system.copySystemConfiguration = true;
 
     i18n.defaultLocale = "en_US.UTF-8";
 
@@ -62,6 +55,13 @@ in {
       vim
       wget
       smartmontools
+      coreutils
+      utillinux
+      screen
+      ncdu
+      file
+      sudo
+      which
     ];
 
     programs.mtr.enable = true;
@@ -73,15 +73,7 @@ in {
 
     services.openssh.enable = true;
 
-    services.locate.enable = true;
-
-    services.redshift.enable = mkIf linuxWorkstation true;
-
-    hardware.bluetooth.enable = mkIf workstation true;
-
-    nixpkgs.config = {
-      allowUnfree = true;
-    };
+    services.fail2ban.enable = true;
 
     nix = {
       gc = {
@@ -95,11 +87,54 @@ in {
           "https://lean4.cachix.org/"
         ];
       };
+      extraOptions = ''
+        experimental-features = nix-command flakes recursive-nix
+      '';
+    };
+
+    system.autoUpgrade.enable = true;
+
+    services.journalwatch = {
+      enable = true;
+      mailTo = "etienne@atnnn.com";
+      priority = 4; # warning
+      filterBlocks = [{
+        match = "SYSLOG_IDENTIFIER = sshd";
+        filters = ''
+          fatal: Timeout before authentication for [^ ]+ port \d+
+          error: PAM: Authentication failure .*
+          error: kex_exchange_identification: .*
+          pam_unix(sshd:auth): check pass; user unknown
+          pam_unix(sshd:auth): authentication failure; .*
+        '';
+      } {
+        match = "SYSLOG_IDENTIFIER = dhcpcd";
+        filters = ''
+          eth0: failed to renew DHCP, rebinding
+        '';
+      } {
+        match = "SYSLOG_IDENTIFIER = fail2ban";
+        filters = ''
+          NOTICE [sshd] (Ban|Unban) [^ ]+
+        '';
+      }];
+    };
+
+    services.postfix = {
+      enable = true;
+      domain = "${host.name}.atnnn.com";
+      hostname = "${host.name}.atnnn.com";
+      virtual = "@${host.name}.atnnn.com etienne@atnnn.com";
+      extraConfig = ''
+        inet_interfaces = loopback-only
+      '';
     };
 
     services.nebula.networks.atnnn.enable = true;
 
-  }) (mkIf linuxWorkstation {
+  } (mkIf host.profiles.linuxWorkstation {
+
+    services.redshift.enable = true;
 
     boot.loader.grub = {
       enable = true;
@@ -125,7 +160,9 @@ in {
       # extraSessionCommands = '' '';
     };
 
-  }) (mkIf workstation {
+    hardware.bluetooth.enable = true;
+
+  }) (mkIf host.profiles.workstation {
 
     location = mesa_AZ;
 
@@ -149,7 +186,7 @@ in {
       nssmdns = true;
     };
 
-  }) (mkIf mesh.profile.laptop {
+  }) (mkIf host.profiles.laptop {
 
     powerManagement = {
       enable = true;
@@ -175,7 +212,7 @@ in {
 
     services.auto-cpufreq.enable = true;
 
-  }) (mkIf mesh.profile.extras {
+  }) (mkIf host.profiles.extras {
 
     virtualisation.docker.enable = true;
 
@@ -188,5 +225,9 @@ in {
       ];
     };
 
-  })];
+    environment.systemPackages = with pkgs; [
+      man man-pages stdmanpages
+    ];
+
+  })]);
 }
