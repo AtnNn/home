@@ -86,6 +86,10 @@ in {
     };
 
     nix = {
+      nixPath = [
+        "nixpkgs=${mesh.nixpkgs}"
+      ];
+      channel.enable = false;
       gc = {
         automatic = true;
         dates = "weekly";
@@ -180,7 +184,11 @@ in {
 
     sound.enable = true;
 
-    services.pipewire.enable = true;
+    services.pipewire = {
+      enable = true;
+      pulse.enable = true;
+      alsa.enable = true;
+    };
 
     services.printing = {
       enable = true;
