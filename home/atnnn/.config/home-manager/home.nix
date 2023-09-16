@@ -42,7 +42,7 @@ in {
 
   programs.emacs = {
     enable = true;
-    package = pkgs.emacs;
+    package = pkgs.emacs29;
     extraPackages = epkg: [
       epkg.flycheck
       epkg.magit
