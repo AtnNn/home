@@ -35,6 +35,7 @@ in {
         allowedTCPPorts = [ 22 ];
         allowPing = true;
       };
+      extraHosts = lib.concatLines (map (host: "${host.ip} ${host.name}") mesh.nodes.hosts);
     };
 
     system.copySystemConfiguration = true;
@@ -71,6 +72,15 @@ in {
     services.openssh.enable = true;
 
     services.fail2ban.enable = true;
+
+    services.smartd = {
+      enable = true;
+      services.smartd.notifications.test = true;
+      services.smartd.notifications.mail = {
+        recipient = "etienne@atnnn.com";
+	enable = true;
+      };
+    };
 
     nix = {
       nixPath = [
