@@ -8,8 +8,8 @@ host=$1; shift
 
 if [[ "$host" != `hostname` ]]; then
     remote=(
-        --build-host $host
-        --target-host $host
+        --build-host $host.mesh.atnnn.com
+        --target-host $host.mesh.atnnn.com
         --use-remote-sudo
     )
 fi

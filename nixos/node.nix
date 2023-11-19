@@ -26,9 +26,6 @@ in {
 
     nixpkgs = {
       pkgs = mesh.pkgs;
-      config = {
-        allowUnfree = true;
-      };
     };
 
     networking = {
@@ -221,9 +218,9 @@ in {
     virtualisation.docker.enable = true;
 
     fonts = {
-      enableDefaultFonts = true;
+      enableDefaultPackages = true;
       fontDir.enable = true;
-      fonts = with pkgs; [
+      packages = with pkgs; [
         dejavu_fonts freefont_ttf unifont unifont_upper
         font-awesome noto-fonts noto-fonts-emoji
       ];
