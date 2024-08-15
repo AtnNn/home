@@ -60,6 +60,7 @@ in {
       file
       sudo
       which
+      nebula
     ];
 
     programs.mtr.enable = true;
