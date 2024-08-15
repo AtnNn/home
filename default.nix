@@ -1,6 +1,8 @@
 let
 
-nixpkgs-url = "https://github.com/NixOS/nixpkgs/archive/master.tar.gz";
+nixpkgs-commit = builtins.substring 0 40 (builtins.readFile ./nixpkgs.commit);
+
+nixpkgs-url = "https://github.com/NixOS/nixpkgs/archive/${nixpkgs-commit}.tar.gz";
 
 nixpkgs = builtins.fetchTarball {
   url = nixpkgs-url;

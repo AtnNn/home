@@ -35,7 +35,7 @@ in {
         allowedTCPPorts = [ 22 ];
         allowPing = true;
       };
-      extraHosts = lib.concatLines (map (host: "${host.ip} ${host.name}") mesh.nodes.hosts);
+      extraHosts = lib.concatLines (map (host: "${host.ip} ${host.name}") (attrValues mesh.nodes.hosts));
     };
 
     system.copySystemConfiguration = true;
@@ -75,10 +75,10 @@ in {
 
     services.smartd = {
       enable = true;
-      services.smartd.notifications.test = true;
-      services.smartd.notifications.mail = {
+      notifications.test = true;
+      notifications.mail = {
         recipient = "etienne@atnnn.com";
-	enable = true;
+        enable = true;
       };
     };
 
@@ -177,9 +177,7 @@ in {
 
     location = mesa_AZ;
 
-    hardware.opengl.enable = true;
-
-    sound.enable = true;
+    hardware.graphics.enable = true;
 
     services.pipewire = {
       enable = true;
@@ -194,7 +192,7 @@ in {
 
     services.avahi = {
       enable = true;
-      nssmdns = true;
+      nssmdns6 = true;
     };
 
   }) (mkIf host.profiles.laptop {
