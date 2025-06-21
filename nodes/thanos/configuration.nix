@@ -67,6 +67,13 @@ in {
         };
       };
     };
+    virtualHosts."wordsmyth.atnnn.com" = {
+      forceSSL = true;
+      enableACME = true;
+      locations = {
+        "/".proxyPass = "http://localhost:7654";
+      };
+    };
     # virtualHosts."proxy" = {
     #   port = 4000;
     #   locations."/" = {
@@ -83,7 +90,7 @@ in {
   services.earlyoom = {
     enable = true;
     freeMemThreshold = 1;
-    freeSwapThreshold = 50; 
+    freeSwapThreshold = 50;
   };
 }
 
