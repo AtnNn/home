@@ -117,6 +117,8 @@ in {
           error: kex_exchange_identification: .*
           pam_unix(sshd:auth): check pass; user unknown
           pam_unix(sshd:auth): authentication failure; .*
+          error: kex protocol error: .*
+          error: Protocol major versions differ: 2 vs. 1
         '';
       } {
         match = "SYSLOG_IDENTIFIER = dhcpcd";
@@ -127,6 +129,8 @@ in {
         match = "SYSLOG_IDENTIFIER = fail2ban";
         filters = ''
           NOTICE [sshd] (Ban|Unban) [^ ]+
+          WARNING [sshd] Detected a log entry 7h after the current time in operation mode.*
+          WARNING [sshd] Please check a jail for a timing issue.*
         '';
       }];
     };
