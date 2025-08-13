@@ -30,5 +30,5 @@ in {
     };
     serviceConfig.LoadCredential = "garage_rpc_secret:/etc/garage/rpc_secret";
   };
-  environment.variables.GARAGE_RPC_SECRET_FILE = "/etc/garage/rpc_secret";
+  config.environment.variables.GARAGE_RPC_SECRET_FILE = "/etc/garage/rpc_secret";
 }
