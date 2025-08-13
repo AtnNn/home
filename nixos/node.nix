@@ -20,25 +20,23 @@ in {
 
   imports = [
     mesh.modules.nebula
+    mesh.modules.garage
   ];
 
   config = mkIf (host != null) (mkMerge [{
 
     nixpkgs = {
       pkgs = mesh.pkgs;
-      config = {
-        allowUnfree = true;
-      };
     };
 
     networking = {
       hostName = host.name;
       firewall = {
         enable = true;
-        allowedTCPPorts = [ 22 ];
+        allowedTCPPorts = [ 22 mesh.shared.garage_rpc_port ];
         allowPing = true;
       };
-      extraHosts = lib.concatLines (lib.mapAttrsFlatten (name: host: "${host.ip} ${name}") mesh.nodes.hosts);
+      extraHosts = lib.concatLines (map (host: "${host.ip} ${host.name}") (attrValues mesh.nodes.hosts));
     };
 
     system.copySystemConfiguration = true;
@@ -63,6 +61,7 @@ in {
       file
       sudo
       which
+      nebula
     ];
 
     programs.mtr.enable = true;
@@ -81,7 +80,7 @@ in {
       notifications.test = true;
       notifications.mail = {
         recipient = "etienne@atnnn.com";
-	enable = true;
+        enable = true;
       };
     };
 
@@ -106,8 +105,6 @@ in {
       '';
     };
 
-    system.autoUpgrade.enable = true;
-
     services.journalwatch = {
       enable = true;
       mailTo = "etienne@atnnn.com";
@@ -120,6 +117,8 @@ in {
           error: kex_exchange_identification: .*
           pam_unix(sshd:auth): check pass; user unknown
           pam_unix(sshd:auth): authentication failure; .*
+          error: kex protocol error: .*
+          error: Protocol major versions differ: 2 vs. 1
         '';
       } {
         match = "SYSLOG_IDENTIFIER = dhcpcd";
@@ -130,6 +129,8 @@ in {
         match = "SYSLOG_IDENTIFIER = fail2ban";
         filters = ''
           NOTICE [sshd] (Ban|Unban) [^ ]+
+          WARNING [sshd] Detected a log entry 7h after the current time in operation mode.*
+          WARNING [sshd] Please check a jail for a timing issue.*
         '';
       }];
     };
@@ -139,9 +140,6 @@ in {
       domain = "${host.name}.atnnn.com";
       hostname = "${host.name}.atnnn.com";
       virtual = "@${host.name}.atnnn.com etienne@atnnn.com";
-      extraConfig = ''
-        inet_interfaces = loopback-only
-      '';
     };
 
     services.nebula.networks.atnnn.enable = true;
@@ -164,8 +162,8 @@ in {
           command = "${pkgs.greetd.tuigreet}/bin/tuigreet --time --remember --cmd /run/current-system/sw/bin/sway";
           user = "greeter";
         };
+        terminal = { vt = lib.mkForce 7; };
       };
-      vt = 7;
     };
 
     programs.sway = {
@@ -180,9 +178,7 @@ in {
 
     location = mesa_AZ;
 
-    hardware.opengl.enable = true;
-
-    sound.enable = true;
+    hardware.graphics.enable = true;
 
     services.pipewire = {
       enable = true;
@@ -197,7 +193,7 @@ in {
 
     services.avahi = {
       enable = true;
-      nssmdns = true;
+      nssmdns6 = true;
     };
 
   }) (mkIf host.profiles.laptop {
@@ -231,9 +227,9 @@ in {
     virtualisation.docker.enable = true;
 
     fonts = {
-      enableDefaultFonts = true;
+      enableDefaultPackages = true;
       fontDir.enable = true;
-      fonts = with pkgs; [
+      packages = with pkgs; [
         dejavu_fonts freefont_ttf unifont unifont_upper
         font-awesome noto-fonts noto-fonts-emoji
       ];

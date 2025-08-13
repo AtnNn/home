@@ -1,13 +1,17 @@
 let
 
-nixpkgs-url = "https://github.com/NixOS/nixpkgs/archive/nixos-23.05.tar.gz";
+nixpkgs-commit = builtins.substring 0 40 (builtins.readFile ./nixpkgs.commit);
+
+nixpkgs-url = "https://github.com/NixOS/nixpkgs/archive/${nixpkgs-commit}.tar.gz";
 
 nixpkgs = builtins.fetchTarball {
   url = nixpkgs-url;
   sha256 = builtins.substring 0 52 (builtins.readFile ./nixpkgs.sha256);
 };
 
-pkgs = import nixpkgs {};
+pkgs = import nixpkgs {
+  allowUnfree = true;
+};
 
 mesh = {
   inherit pkgs nixpkgs nixpkgs-url;
@@ -15,7 +19,7 @@ mesh = {
 
   nodes = import ./nodes mesh;
   shared = import ./shared mesh;
-  modules = import ./nixos mesh; 
+  modules = import ./nixos mesh;
 };
 
 in mesh
