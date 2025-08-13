@@ -14,16 +14,16 @@ make-hosts = mapAttrs (name: id: let
   };
   in defaults // attrs // f attrs);
 
-mkProfiles = profiles: {
+mkProfiles = profiles: let p = {
     server = false;
     desktop = false;
     laptop = false;
     wsl = false;
     extras = false;
-  } // profiles // {
-    workstation = profiles.laptop or false || profiles.desktop or false;
-    linuxWorkstation = (profiles.laptop or false || profiles.desktop or false) && ! profiles.wsl or false;
-  };
+  } // profiles; in {
+    workstation = p.laptop || p.desktop;
+    linuxWorkstation = (p.laptop || p.desktop) && ! p.wsl;
+  } // p;
 
 nodes = {
   inherit mkProfiles;

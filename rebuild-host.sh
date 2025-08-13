@@ -2,6 +2,8 @@
 
 set -eu
 
+root=$(cd "$(dirname "$0")" && pwd)
+
 nixpkgs=$(eval echo `nix-instantiate . --eval -A nixpkgs`)
 
 host=$1; shift
@@ -14,4 +16,6 @@ if [[ "$host" != `hostname` ]]; then
     )
 fi
 
-nixos-rebuild -I nixos-config=nodes/$host/configuration.nix -I nixpkgs=$nixpkgs "${remote[@]}" "$@"
+NIX_PATH="nixos-config=$root/nodes/$host/configuration.nix:nixpkgs=$nixpkgs" \
+        nix run ${nixpkgs}#nix -- \
+        run ${nixpkgs}#nixos-rebuild -- "${remote[@]}" "$@"
