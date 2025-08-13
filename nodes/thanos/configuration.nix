@@ -21,6 +21,7 @@ in {
 
   nix = {
     settings.cores = 12;
+    settings.allowed-uris = "github:";
     distributedBuilds = true; # TODO
     # buildMachines = [
     #   { hostName = "localhost";
