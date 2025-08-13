@@ -9,6 +9,7 @@ lighthouses = remove host.ip mesh.nodes.lighthouses;
 in {
   config.services.nebula.networks.atnnn = {
     staticHostMap = mesh.nodes.staticHostMap;
+    lighthouses = lighthouses;
     relays = lighthouses;
     isRelay = host.lighthouse;
     isLighthouse = host.lighthouse;
