@@ -38,7 +38,7 @@ in {
         allowedTCPPorts = [ 22 ];
         allowPing = true;
       };
-      extraHosts = lib.concatLines (map (host: "${host.ip} ${host.name}") mesh.nodes.hosts);
+      extraHosts = lib.concatLines (lib.mapAttrsFlatten (name: host: "${host.ip} ${name}") mesh.nodes.hosts);
     };
 
     system.copySystemConfiguration = true;
@@ -78,8 +78,8 @@ in {
 
     services.smartd = {
       enable = true;
-      services.smartd.notifications.test = true;
-      services.smartd.notifications.mail = {
+      notifications.test = true;
+      notifications.mail = {
         recipient = "etienne@atnnn.com";
 	enable = true;
       };
