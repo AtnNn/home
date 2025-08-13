@@ -20,6 +20,7 @@ in {
 
   imports = [
     mesh.modules.nebula
+    mesh.modules.garage
   ];
 
   config = mkIf (host != null) (mkMerge [{
@@ -32,7 +33,7 @@ in {
       hostName = host.name;
       firewall = {
         enable = true;
-        allowedTCPPorts = [ 22 ];
+        allowedTCPPorts = [ 22 mesh.shared.garage_rpc_port ];
         allowPing = true;
       };
       extraHosts = lib.concatLines (map (host: "${host.ip} ${host.name}") (attrValues mesh.nodes.hosts));
@@ -139,9 +140,6 @@ in {
       domain = "${host.name}.atnnn.com";
       hostname = "${host.name}.atnnn.com";
       virtual = "@${host.name}.atnnn.com etienne@atnnn.com";
-      extraConfig = ''
-        inet_interfaces = loopback-only
-      '';
     };
 
     services.nebula.networks.atnnn.enable = true;
@@ -164,8 +162,8 @@ in {
           command = "${pkgs.greetd.tuigreet}/bin/tuigreet --time --remember --cmd /run/current-system/sw/bin/sway";
           user = "greeter";
         };
+        terminal = { vt = lib.mkForce 7; };
       };
-      vt = 7;
     };
 
     programs.sway = {
