@@ -24,7 +24,7 @@ nodes/%/nebula.crt: delme/ca.key FORCE
 
 .PHONY: new-ca
 new-ca: delme/
-	rm shared/nebula-ca.crt
+	mv shared/nebula-ca.crt shared/nebula-ca-previous.crt
 	nebula-cert ca \
 	  -name 'AtnNn' \
 	  -out-crt shared/nebula-ca.crt \
