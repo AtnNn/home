@@ -42,7 +42,7 @@ in {
 
   programs.emacs = {
     enable = true;
-    package = pkgs.emacs29;
+    package = pkgs.emacs;
     extraPackages = epkg: [
       epkg.flycheck
       epkg.magit
@@ -61,7 +61,6 @@ in {
       epkg.magit-section
       epkg.s
       epkg.rust-mode
-      epkg.lean-mode
       epkg.cargo
       epkg.cargo-mode
       epkg.rust-auto-use
@@ -70,6 +69,14 @@ in {
       epkg.svelte-mode
       epkg.cmake-mode
       epkg.lsp-treemacs
+      epkg.vterm
+      epkg.eglot
+      epkg.prettier
+      epkg.treesit-auto
+      epkg.treesit-grammars.with-all-grammars
+      epkg.hide-mode-line
+      epkg.flycheck-projectile
+      epkg.helm-company
     ];
   };
 
@@ -217,8 +224,9 @@ in {
     pkgs.lsof
     pkgs.netcat-gnu
     pkgs.ninja
-    (pkgs.lib.hiPrio pkgs.nixUnstable)
-    pkgs.nodejs
+    # (pkgs.lib.hiPrio pkgs.nixUnstable)
+    pkgs.nix
+    # pkgs.nodejs
     pkgs.p7zip
     pkgs.pandoc
     pkgs.patchelf
@@ -231,7 +239,7 @@ in {
     pkgs.sbt
     pkgs.scala
     pkgs.sqlite
-    pkgs.swiProlog
+    pkgs.swi-prolog
     pkgs.tigervnc
     # pkgs.texlive.combined.scheme-full
     # pkgs.haskellPackages.warp
@@ -251,7 +259,7 @@ in {
     # })
     pkgs.llvmPackages_latest.llvm
     pkgs.llvmPackages_latest.bintools
-    # pkgs.rustup
+    pkgs.rustup
     pkgs.llvmPackages_latest.lld
     pkgs.acpi
     pkgs.signal-desktop
@@ -283,5 +291,14 @@ in {
     pkgs.ncdu
     pkgs.nix-diff
     pkgs.unzip
+    pkgs.shellcheck
+    # pkgs.typescript
+    # pkgs.typescript-language-server
+    pkgs.pnpm
+    pkgs.rustup
+    pkgs.qbittorrent
+    pkgs.i2p
+    pkgs.gh
+    pkgs.lorri
   ];
 }

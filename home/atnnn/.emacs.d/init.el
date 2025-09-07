@@ -41,7 +41,6 @@
 (require 'package)
 (add-to-list 'package-archives '("gnu" . "https://elpa.gnu.org/packages/"))
 (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/"))
-(package-initialize)
 
 ;; Paredit
 ;;(add-to-list 'paredit-space-for-delimiter-predicates
@@ -125,7 +124,7 @@ which is suitable for most programming languages such as C or Lisp."
       (char-syntax (or (char-after start) ?\s)))
      (not (nth 8 (syntax-ppss)))))
 (setq c-mode-common-hook nil)
-(add-hook 'c-mode-common-hook
+(add-hook 'c-mode-common-hook-disabled
           (lambda ()
             (setq prettify-symbols-compose-predicate #'custom-psdcp)
             (setq prettify-symbols-alist '(
@@ -186,9 +185,173 @@ which is suitable for most programming languages such as C or Lisp."
 
 (add-hook 'c-mode-common-hook 'variable-pitch-mode)
 (add-hook 'nix-mode-hook 'variable-pitch-mode)
+(add-hook 'rustic-mode-hook 'variable-pitch-mode)
+
+(setq rust-prettify-symbols-alist '())
+(push '("==" . ?≡) rust-prettify-symbols-alist)
+(push '("&&" . ?⋀) rust-prettify-symbols-alist)
+(push '("||" . ?⋁) rust-prettify-symbols-alist)
+(push '("true" . ?⊤) rust-prettify-symbols-alist)
+(push '("false" . ?⊥) rust-prettify-symbols-alist)
+(push '("bool" . ?𝔹) rust-prettify-symbols-alist)
+(push '("[0]" . ?₀) rust-prettify-symbols-alist)
+(push '("[1]" . ?₁) rust-prettify-symbols-alist)
+(push '("[2]" . ?₂) rust-prettify-symbols-alist)
+(push '("[3]" . ?₃) rust-prettify-symbols-alist)
+(push '("[4]" . ?₄) rust-prettify-symbols-alist)
+(push '("[n]" . ?ₙ) rust-prettify-symbols-alist)
+(push '("[i]" . ?ᵢ) rust-prettify-symbols-alist)
+(push '("[j]" . ?ⱼ) rust-prettify-symbols-alist)
+(push '("[k]" . ?ₖ) rust-prettify-symbols-alist)
+(push '(" * " . ?∙) rust-prettify-symbols-alist)
+(push '("*" . ?∗) rust-prettify-symbols-alist)
+(push '("()" . ?≬) rust-prettify-symbols-alist)
+(push '("=" . ?⇇) rust-prettify-symbols-alist)
+(push '("return" . ?∎) rust-prettify-symbols-alist)
+(push '("&" . ?§) rust-prettify-symbols-alist)
+(push '(";" . ?⸳) rust-prettify-symbols-alist)
+(push '("{" . ?⸢) rust-prettify-symbols-alist)
+(push '("}" . ?⸥) rust-prettify-symbols-alist)
+(push '("i" . ?ꙇ) rust-prettify-symbols-alist)
+(push '("if" . ?⎇) rust-prettify-symbols-alist)
+(push '("else" . ?⌥) rust-prettify-symbols-alist)
+(push '("->" . ?→) rust-prettify-symbols-alist)
+(push '("=>" . ?⇒) rust-prettify-symbols-alist)
+(push '(".unwrap()" . ?⁉) rust-prettify-symbols-alist)
+(push '(".await" . ?⟳) rust-prettify-symbols-alist)
+(push '("." . ?￫) rust-prettify-symbols-alist)
+(push '("#" . ?♯) rust-prettify-symbols-alist)
+(push '("&mut" . ?※) rust-prettify-symbols-alist)
+(push '("String" . ?𝕊) rust-prettify-symbols-alist)
+(push '("bool" . ?𝔹) rust-prettify-symbols-alist)
+(push '("," . ?᷂) rust-prettify-symbols-alist)
+(push '("{" . ?¤) rust-prettify-symbols-alist)
+(push '("}" . ?᷂) rust-prettify-symbols-alist)
+(push '("pub" . ?👁) rust-prettify-symbols-alist)
+(push '("let" . ?∵) rust-prettify-symbols-alist)
+
+
+(add-hook 'rustic-mode-hook
+          (lambda ()
+            (setq prettify-symbols-compose-predicate #'custom-psdcp)
+            (setq prettify-symbols-alist rust-prettify-symbols-alist)))
 
 (setf
  (alist-get 'nix-build compilation-error-regexp-alist-alist)
  '("^ *at \\([^:]+\\):\\([0-9]+\\):\\([0-9]+\\):$" 1 2 3))
 
 (setq ediff-window-setup-function #'ediff-setup-windows-plain)
+
+(defalias 'eshell/v 'eshell-exec-visual)
+
+;;;
+
+(require 'prettier)
+;;(global-set-key (kbd "C-c e f") 'prettier-prettify)
+(global-set-key (kbd "C-c e f") 'lsp-format-buffer)
+
+;; ANSI colors in compilation output
+(require 'ansi-color)
+(add-hook 'compilation-filter-hook 'ansi-color-compilation-filter)
+
+;; Treesit
+(require 'treesit-auto)
+(treesit-auto-add-to-auto-mode-alist 'all)
+(global-treesit-auto-mode t)
+
+;;;; Typescript
+
+;; Language server
+(require 'eglot)
+(setq eglot-events-buffer-size 10000)
+(add-hook 'typescript-ts-mode-hook 'eglot-ensure)
+(add-hook 'tsx-ts-mode-hook 'eglot-ensure)
+(setq-default eglot-inlay-hints-mode nil)
+(setq typescript-language-server-config
+      '("/home/atnnn/code/whatthepuck/node_modules/.bin/typescript-language-server" "--stdio"
+        ;; :initializationOptions
+    ;; (:preferences
+    ;;  ( ;; https://github.com/typescript-language-server/typescript-language-server/blob/master/docs/configuration.md
+    ;;   :disableSuggestions                                    :json-false     ;; boolean
+    ;;   :quotePreference                                       "double"        ;; "auto" | "double" | "single"
+    ;;   :includeCompletionsForModuleExports                    t               ;; boolean
+    ;;   :includeCompletionsForImportStatements                 t               ;; boolean
+    ;;   :includeCompletionsWithSnippetText                     t               ;; boolean
+    ;;   :includeCompletionsWithInsertText                      t               ;; boolean
+    ;;   :includeAutomaticOptionalChainCompletions              t               ;; boolean
+    ;;   :includeCompletionsWithClassMemberSnippets             t               ;; boolean
+    ;;   :includeCompletionsWithObjectLiteralMethodSnippets     t               ;; boolean
+    ;;   :useLabelDetailsInCompletionEntries                    t               ;; boolean
+    ;;   :allowIncompleteCompletions                            t               ;; boolean
+    ;;   :importModuleSpecifierPreference                       "shortest"      ;; "shortest" | "project-relative" | "relative" | "non-relative"
+    ;;   :importModuleSpecifierEnding                           "minimal"       ;; "auto" | "minimal" | "index" | "js"
+    ;;   :allowTextChangesInNewFiles                            t               ;; boolean
+    ;;   :providePrefixAndSuffixTextForRename                   t               ;; boolean
+    ;;   :provideRefactorNotApplicableReason                    :json-false     ;; boolean
+    ;;   :allowRenameOfImportPath                               t               ;; boolean
+    ;;   :jsxAttributeCompletionStyle                           "auto"          ;; "auto" | "braces" | "none"
+    ;;   :displayPartsForJSDoc                                  t               ;; boolean
+    ;;   :generateReturnInDocTemplate                           t               ;; boolean
+    ;;   :includeInlayParameterNameHints                        "all"           ;; "none" | "literals" | "all"
+    ;;   :includeInlayParameterNameHintsWhenArgumentMatchesName t               ;; boolean
+    ;;   :includeInlayFunctionParameterTypeHints                t               ;; boolean,
+    ;;   :includeInlayVariableTypeHints                         t               ;; boolean
+    ;;   :includeInlayVariableTypeHintsWhenTypeMatchesName      t               ;; boolean
+    ;;   :includeInlayPropertyDeclarationTypeHints              t               ;; boolean
+    ;;   :includeInlayFunctionLikeReturnTypeHints               t               ;; boolean
+    ;;   :includeInlayEnumMemberValueHints                      t               ;; boolean
+    ;;   :disableLineTextInReferences                           :json-false
+    ;;   )
+    ;;  ;:plugins [(:name "typescript-eslint-language-service")]
+    ;;  )
+    )
+  )
+
+(add-to-list 'eglot-server-programs
+   `((typescript-ts-mode
+      (tsx-ts-mode :language-id "tyspescriptreact"))
+     . ,typescript-language-server-config))
+
+(setq eglot-confirm-server-initiated-edits nil)
+
+(add-to-list 'compilation-error-regexp-alist-alist
+             '(typescript-error " *\\([^:\n]*\\):\\([0-9]+\\):\\([0-9]+\\) - error TS" 1 2 3 2))
+(add-to-list 'compilation-error-regexp-alist 'typescript-error)
+(add-to-list 'compilation-error-regexp-alist-alist
+             '(node-stacktrace " at .* (\\([^:\n]+\\):\\([0-9]+\\):\\([0-9]+\\))" 1 2 3 2))
+(add-to-list 'compilation-error-regexp-alist 'node-stacktrace)
+
+(global-set-key (kbd "C-c e a") 'eglot-code-actions)
+(global-set-key (kbd "C-c e n") 'flycheck-next-error)
+(global-set-key (kbd "C-c e N") 'flycheck-previous-error)
+(global-set-key (kbd "C-c e e") 'flycheck-list-errors)
+(global-set-key (kbd "C-c e s") 'eglot)
+(global-set-key (kbd "C-c e S") 'eglot-shutdown)
+(global-set-key (kbd "C-c e F") 'eglot-format)
+(global-set-key (kbd "C-c e h") 'eglot-inlay-hints-mode)
+(global-set-key (kbd "C-c e d") 'eldoc-print-current-symbol-info)
+(global-set-key (kbd "C-c e /") 'completion-at-point)
+(global-set-key (kbd "C-c e r") 'eglot-rename)
+(global-set-key (kbd "C-c e t") 'eglot-find-typeDefinition)
+(global-set-key (kbd "C-c e q") 'eglot-code-action-quickfix)
+(global-set-key (kbd "C-c e i") 'imenu)
+
+;;;;;;;;;;;;;;;
+
+
+(setq load-path (cons "/home/atnnn/code/LEAN/lean4-mode" load-path))
+
+(setq lean4-mode-required-packages '(dash flycheck lsp-mode magit-section))
+
+(require 'package)
+(add-to-list 'package-archives '("melpa" . "http://melpa.org/packages/"))
+(package-initialize)
+(let ((need-to-refresh t))
+  (dolist (p lean4-mode-required-packages)
+    (when (not (package-installed-p p))
+      (when need-to-refresh
+        (package-refresh-contents)
+        (setq need-to-refresh nil))
+      (package-install p))))
+
+(require 'lean4-mode)
