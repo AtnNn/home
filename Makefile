@@ -9,7 +9,7 @@ nixpkgs.sha256: FORCE
 
 nixpkgs.commit: FORCE
 	curl --silent 'https://prometheus.nixos.org/api/v1/query?query=channel_revision' \
-	  | jq -r '.data.result[].metric | select(.channel == "nixos-unstable") | .revision' \
+	  | jq -r '.data.result.[].metric | select(.channel == "nixos-unstable") | .revision' \
 	  > $@
 
 nodes/%/nebula.crt: delme/ca.key FORCE
