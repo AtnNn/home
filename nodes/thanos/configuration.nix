@@ -93,5 +93,7 @@ in {
     freeMemThreshold = 1;
     freeSwapThreshold = 50;
   };
+
+ virtualisation.docker.enable = true;
 }
 
