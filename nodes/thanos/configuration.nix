@@ -75,6 +75,14 @@ in {
         "/".proxyPass = "http://localhost:7654";
       };
     };
+    virtualHosts."tiger.atnnn.com" = {
+      forceSSL = true;
+      enableACME = true;
+      locations = {
+        "/v1".proxyPass = "http://localhost:7777";
+        "/".proxyPass = "http://localhost:7778";
+      };
+    };
     # virtualHosts."proxy" = {
     #   port = 4000;
     #   locations."/" = {
@@ -94,6 +102,8 @@ in {
     freeSwapThreshold = 50;
   };
 
- virtualisation.docker.enable = true;
+  virtualisation.docker.enable = true;
+
+  environment.enableAllTerminfo = true;
 }
 
