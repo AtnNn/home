@@ -119,6 +119,7 @@ in {
           pam_unix(sshd:auth): authentication failure; .*
           error: kex protocol error: .*
           error: Protocol major versions differ: 2 vs. 1
+          error: kex_exchange_identification: read: Connection reset by peer
         '';
       } {
         match = "SYSLOG_IDENTIFIER = dhcpcd";
@@ -131,6 +132,11 @@ in {
           NOTICE [sshd] (Ban|Unban) [^ ]+
           WARNING [sshd] Detected a log entry 7h after the current time in operation mode.*
           WARNING [sshd] Please check a jail for a timing issue.*
+        '';
+      } {
+        match = "SYSLOG_IDENTIFIER = docker";
+        filters = ''
+	  Session done
         '';
       }];
     };
