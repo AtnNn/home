@@ -55,13 +55,15 @@ in {
       wget
       smartmontools
       coreutils
-      utillinux
+      util-linux
       screen
       ncdu
       file
       sudo
       which
       nebula
+      htop
+      magic-wormhole-rs
     ];
 
     programs.mtr.enable = true;
@@ -143,8 +145,10 @@ in {
 
     services.postfix = {
       enable = true;
-      domain = "${host.name}.atnnn.com";
-      hostname = "${host.name}.atnnn.com";
+      settings.main = {
+        mydomain = "${host.name}.atnnn.com";
+        myhostname = "${host.name}.atnnn.com";
+      };
       virtual = "@${host.name}.atnnn.com etienne@atnnn.com";
     };
 
