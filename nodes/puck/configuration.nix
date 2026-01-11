@@ -18,5 +18,10 @@ in {
     enp0s25.useDHCP = true;
     wlp3s0.useDHCP = true;
   };
+
+ services.minidlna = {
+    enable = true;
+    media_dir = [ "/home/atnnn/Shared-Media" ]
+  };
 }
 
