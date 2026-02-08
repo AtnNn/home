@@ -19,9 +19,13 @@ in {
     wlp3s0.useDHCP = true;
   };
 
- services.minidlna = {
+  services.minidlna = {
     enable = true;
-    media_dir = [ "/home/atnnn/Shared-Media" ]
+    settings.inotify = "yes";
+    settings.notify_interval = 30;
+    settings.media_dir = [ "/var/media-server" ];
+    settings.wide_links = "yes";
+    openFirewall = true;
   };
 }
 
