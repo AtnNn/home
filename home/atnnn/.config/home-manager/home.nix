@@ -300,5 +300,21 @@ in {
     pkgs.i2p
     pkgs.gh
     pkgs.lorri
+    pkgs.swift
+    pkgs.jujutsu
+    pkgs.ffmpeg
+    pkgs.mp4v2
+    pkgs.asunder
+    pkgs.bc
+    pkgs.coreutils-full
+    pkgs.magic-wormhole
+    pkgs.oniux
+    pkgs.android-studio-tools
+    pkgs.android-studio
+    pkgs.gemini-cli
+    pkgs.webkitgtk_4_1
+    pkgs.librsvg
+    pkgs.radicle-node
+    pkgs.radicle-tui
   ];
 }

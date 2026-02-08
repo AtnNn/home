@@ -188,12 +188,7 @@ which is suitable for most programming languages such as C or Lisp."
 (add-hook 'rustic-mode-hook 'variable-pitch-mode)
 
 (setq rust-prettify-symbols-alist '())
-(push '("==" . ?≡) rust-prettify-symbols-alist)
-(push '("&&" . ?⋀) rust-prettify-symbols-alist)
-(push '("||" . ?⋁) rust-prettify-symbols-alist)
-(push '("true" . ?⊤) rust-prettify-symbols-alist)
-(push '("false" . ?⊥) rust-prettify-symbols-alist)
-(push '("bool" . ?𝔹) rust-prettify-symbols-alist)
+(push '("*" . ?∗) rust-prettify-symbols-alist)
 (push '("[0]" . ?₀) rust-prettify-symbols-alist)
 (push '("[1]" . ?₁) rust-prettify-symbols-alist)
 (push '("[2]" . ?₂) rust-prettify-symbols-alist)
@@ -203,38 +198,87 @@ which is suitable for most programming languages such as C or Lisp."
 (push '("[i]" . ?ᵢ) rust-prettify-symbols-alist)
 (push '("[j]" . ?ⱼ) rust-prettify-symbols-alist)
 (push '("[k]" . ?ₖ) rust-prettify-symbols-alist)
-(push '(" * " . ?∙) rust-prettify-symbols-alist)
-(push '("*" . ?∗) rust-prettify-symbols-alist)
+(push '("==" . ?≡) rust-prettify-symbols-alist)
+(push '("&&" . ?⋀) rust-prettify-symbols-alist)
+(push '("||" . ?⋁) rust-prettify-symbols-alist)
 (push '("()" . ?≬) rust-prettify-symbols-alist)
+(push '("i" . ?ꙇ) rust-prettify-symbols-alist)
+(push '("->" . ?→) rust-prettify-symbols-alist)
+(push '("=>" . ?⇒) rust-prettify-symbols-alist)
+(push '(".unwrap()" . ?‽) rust-prettify-symbols-alist)
+(push '(".await" . ?⟳) rust-prettify-symbols-alist)
+(push '("." . ?￫) rust-prettify-symbols-alist)
+(push '(".." . ?⋯) rust-prettify-symbols-alist)
+(push '("_" . ?𛲖) rust-prettify-symbols-alist)
+
+(push '("true" . ?⊤) rust-prettify-symbols-alist)
+(push '("false" . ?⊥) rust-prettify-symbols-alist)
+(push '(" * " . ?∙) rust-prettify-symbols-alist)
 (push '("=" . ?⇇) rust-prettify-symbols-alist)
 (push '("return" . ?∎) rust-prettify-symbols-alist)
 (push '("&" . ?§) rust-prettify-symbols-alist)
 (push '(";" . ?⸳) rust-prettify-symbols-alist)
-(push '("{" . ?⸢) rust-prettify-symbols-alist)
-(push '("}" . ?⸥) rust-prettify-symbols-alist)
-(push '("i" . ?ꙇ) rust-prettify-symbols-alist)
 (push '("if" . ?⎇) rust-prettify-symbols-alist)
 (push '("else" . ?⌥) rust-prettify-symbols-alist)
-(push '("->" . ?→) rust-prettify-symbols-alist)
-(push '("=>" . ?⇒) rust-prettify-symbols-alist)
-(push '(".unwrap()" . ?⁉) rust-prettify-symbols-alist)
-(push '(".await" . ?⟳) rust-prettify-symbols-alist)
-(push '("." . ?￫) rust-prettify-symbols-alist)
 (push '("#" . ?♯) rust-prettify-symbols-alist)
 (push '("&mut" . ?※) rust-prettify-symbols-alist)
 (push '("String" . ?𝕊) rust-prettify-symbols-alist)
+(push '("&str" . ?𝕤) rust-prettify-symbols-alist)
 (push '("bool" . ?𝔹) rust-prettify-symbols-alist)
-(push '("," . ?᷂) rust-prettify-symbols-alist)
-(push '("{" . ?¤) rust-prettify-symbols-alist)
-(push '("}" . ?᷂) rust-prettify-symbols-alist)
+(push '("," . ?,) rust-prettify-symbols-alist)
+(push '("{" . ?｢) rust-prettify-symbols-alist)
+(push '("}" . ?｣) rust-prettify-symbols-alist)
 (push '("pub" . ?👁) rust-prettify-symbols-alist)
 (push '("let" . ?∵) rust-prettify-symbols-alist)
+(push '("Ok" . ?🗹) rust-prettify-symbols-alist)
+(push '("Err" . ?🗷) rust-prettify-symbols-alist)
+(push '("Result" . ?⛋) rust-prettify-symbols-alist)
+(push '("<" . ?⟨) rust-prettify-symbols-alist)
+(push '(">" . ?⟩) rust-prettify-symbols-alist)
+(push '("<<" . ?⟪) rust-prettify-symbols-alist)
+(push '(">>" . ?⟫) rust-prettify-symbols-alist)
+(push '("async" . ?𝦘) rust-prettify-symbols-alist)
 
+(defun rust-pretty-symbol-delimit-p (left right)
+  (or
+   (not left)
+   (not right)
+   (not (eq (car left) (car right)))
+   (memq (car left)
+         '(
+           1 ; punctuation
+           3 ; symbol
+           4 5 ; parens
+           8 ; delimiter
+           ))))
+(defun rust-custom-psdcp (start end match)
+  (let ((break-chars '(?_)))
+    (and
+     (or
+      (eq match ?_)
+      (eq match ?#)
+      (not (memq (get-text-property start 'face)
+                 '(font-lock-string-face
+                   rust-string-interpolation))))
+     (or
+      (and
+       (memq match '("<" ">"))
+       (not (and
+             (eq (char-before start) ?\ )
+             (eq (char-after end) ?\ ))))
+      (and
+       (rust-pretty-symbol-delimit-p
+        (syntax-after (- start 1))
+        (syntax-after start))
+       (rust-pretty-symbol-delimit-p
+        (syntax-after (- end 1))
+        (syntax-after end)))))))
 
-(add-hook 'rustic-mode-hook
-          (lambda ()
-            (setq prettify-symbols-compose-predicate #'custom-psdcp)
-            (setq prettify-symbols-alist rust-prettify-symbols-alist)))
+(defun my-enter-rust-mode ()
+  (setq prettify-symbols-compose-predicate 'rust-custom-psdcp)
+  (setq prettify-symbols-alist rust-prettify-symbols-alist))
+
+(add-hook 'rustic-mode-hook #'my-enter-rust-mode)
 
 (setf
  (alist-get 'nix-build compilation-error-regexp-alist-alist)
@@ -355,3 +399,9 @@ which is suitable for most programming languages such as C or Lisp."
       (package-install p))))
 
 (require 'lean4-mode)
+
+(add-to-list 'compilation-error-regexp-alist 'mlton)
+(add-to-list 'compilation-error-regexp-alist-alist
+             '(mlton
+               "^[[:space:]]*\\(\\(?:\\(Error\\)\\|\\(Warning\\)\\|\\(\\(?:\\(?:defn\\|spec\\) at\\)\\|\\(?:escape \\(?:from\\|to\\)\\)\\|\\(?:scoped at\\)\\)\\): \\(.+\\) \\([0-9]+\\)\\.\\([0-9]+\\)\\(?:-\\([0-9]+\\)\\.\\([0-9]+\\)\\)?\\.?\\)$"
+               5 (6 . 8) (7 . 9) (3 . 4) 1))

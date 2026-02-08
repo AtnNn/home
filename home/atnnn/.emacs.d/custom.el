@@ -28,7 +28,7 @@
                guile-file guile-line))
  '(compilation-scroll-output 'first-error)
  '(compilation-skip-visited t)
- '(custom-enabled-themes '(tango))
+ '(custom-enabled-themes '(tsdh-light))
  '(custom-safe-themes
    '("021321ae56a45794f43b41de09fb2bfca184e196666b7d7ff59ea97ec2114559"
      default))
@@ -36,7 +36,9 @@
    '(beginning-of-line beginning-of-buffer end-of-line end-of-buffer
                        end-of-file buffer-read-only file-supersession
                        mark-inactive))
+ '(direnv-mode t)
  '(global-auto-revert-mode t)
+ '(global-hide-mode-line-mode t)
  '(global-prettify-symbols-mode t)
  '(helm-mode t)
  '(indent-tabs-mode nil)
@@ -48,11 +50,12 @@
  '(lean4-executable-name "/home/atnnn/.nix-profile/bin/lean")
  '(lean4-rootdir
    "/home/atnnn/.elan/toolchains/leanprover--lean4---nightly-2022-01-06/lib/lean")
+ '(lsp-headerline-breadcrumb-enable nil)
  '(lsp-keymap-prefix "C-c l")
  '(lsp-rust-all-features t)
  '(lsp-rust-analyzer-binding-mode-hints t)
  '(lsp-rust-analyzer-cargo-extra-args [])
- '(lsp-rust-analyzer-checkonsave-features ["server"])
+ '(lsp-rust-analyzer-checkonsave-features [])
  '(lsp-rust-analyzer-diagnostics-enable-experimental t)
  '(lsp-rust-analyzer-discriminants-hints "always")
  '(lsp-rust-analyzer-display-chaining-hints t)
@@ -90,12 +93,13 @@
    '(cl-libify darkroom direnv eink-theme eshell-vterm helm
                helm-projectile helm-xref hide-mode-line json-mode
                lsp-mode magit nix-mode projectile rust-mode scala-mode
-               vterm wgrep))
- '(prettify-symbols-unprettify-at-point t)
+               sml-mode sml-ts-mode vterm wgrep))
+ '(prettify-symbols-unprettify-at-point nil)
  '(projectile-completion-system 'helm)
  '(projectile-current-project-on-switch 'move-to-end)
  '(projectile-mode t nil (projectile))
  '(projectile-use-git-grep t)
+ '(ring-bell-function 'ignore)
  '(safe-local-variable-values
    '((eval c-set-offset 'inlambda 0) (eval c-set-offset 'access-label '-)
      (eval c-set-offset 'substatement-open 0)
@@ -107,7 +111,7 @@
      (eval c-set-offset 'innamespace 0) (indicate-empty-lines . t)
      (c-block-comment-prefix . "  ")))
  '(scroll-bar-mode nil)
- '(split-height-threshold 120)
+ '(split-height-threshold 8)
  '(split-width-threshold 80)
  '(tool-bar-mode nil))
 (custom-set-faces
@@ -115,6 +119,8 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(default ((t (:inherit nil :extend nil :stipple nil :background "black" :foreground "WhiteSmoke" :inverse-video nil :box nil :strike-through nil :overline nil :underline nil :slant normal :weight normal :height 150 :width normal :foundry "PfEd" :family "DejaVu Sans Mono"))))
+ '(default ((t (:inherit nil :extend nil :stipple nil :background "#fafafa" :foreground "#383a42" :inverse-video nil :box nil :strike-through nil :overline nil :underline nil :slant normal :weight regular :height 240 :width normal :foundry "PfEd" :family "DejaVu Sans Mono"))))
+ '(header-line ((t (:inherit mode-line :inverse-video t))))
+ '(mode-line ((t (:background "#f0f0f1" :box (:line-width (1 . 1) :color "#383a42") :height 0.5))))
  '(variable-pitch ((t (:family "DejaVu Sans")))))
 
