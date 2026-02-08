@@ -55,7 +55,7 @@ in {
       wget
       smartmontools
       coreutils
-      utillinux
+      util-linux
       screen
       ncdu
       file
@@ -137,9 +137,11 @@ in {
 
     services.postfix = {
       enable = true;
-      domain = "${host.name}.atnnn.com";
-      hostname = "${host.name}.atnnn.com";
       virtual = "@${host.name}.atnnn.com etienne@atnnn.com";
+      settings.main = {
+        mydomain = "${host.name}.atnnn.com";
+        myhostname = "${host.name}.atnnn.com";
+      };
     };
 
     services.nebula.networks.atnnn.enable = true;
@@ -159,7 +161,7 @@ in {
       enable = true;
       settings = {
         default_session = {
-          command = "${pkgs.greetd.tuigreet}/bin/tuigreet --time --remember --cmd /run/current-system/sw/bin/sway";
+          command = "${pkgs.tuigreet}/bin/tuigreet --time --remember --cmd /run/current-system/sw/bin/sway";
           user = "greeter";
         };
         terminal = { vt = lib.mkForce 7; };
@@ -204,10 +206,10 @@ in {
       powertop.enable = true;
     };
 
-    services.logind = {
-      lidSwitch = "hybrid-sleep";
-      lidSwitchDocked = "ignore";
-      lidSwitchExternalPower = "ignore";
+    services.logind.settings.Login = {
+      HandleLidSwitch = "hybrid-sleep";
+      HandleLidSwitchDocked = "ignore";
+      HandleLidSwitchExternalPower = "ignore";
     };
 
     services.upower = {
@@ -231,7 +233,7 @@ in {
       fontDir.enable = true;
       packages = with pkgs; [
         dejavu_fonts freefont_ttf unifont unifont_upper
-        font-awesome noto-fonts noto-fonts-emoji
+        font-awesome noto-fonts noto-fonts-color-emoji
       ];
     };
 
