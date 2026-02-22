@@ -1,2 +1,2 @@
 #!/bin/sh
-exec "$(nix-build ~/.config/nixpkgs/upgrade.nix)/bin/home-upgrade" "$@"
+exec "$(nix-build --no-out-link ~/.config/nixpkgs/upgrade.nix)/bin/home-upgrade" "$@"
