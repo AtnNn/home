@@ -6,5 +6,5 @@
 	url = git@github.com:atnnn/home
 	fetch = +refs/heads/*:refs/remotes/origin/*
 [branch "limbo"]
-        remote = origin
-        merge = refs/heads/limbo
+	remote = origin
+	merge = refs/heads/limbo

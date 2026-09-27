@@ -258,7 +258,7 @@ in {
     pkgs.wl-clipboard
     (on-demand pkgs.blueman)
     pkgs.ncdu
-    pkgs.nix-diff
+    # pkgs.nix-diff
     pkgs.unzip
     (on-demand pkgs.pnpm)
     (on-demand pkgs.rustup)
@@ -267,7 +267,6 @@ in {
     (on-demand pkgs.bc)
     pkgs.coreutils-full
     (on-demand pkgs.jjui)
-    (on-demand pkgs.zed-editor)
     (on-demand pkgs.cabal-install)
     (on-demand-bins pkgs.cppcheck ["cppcheck" "on-demand-test"])
     (on-demand pkgs.exercism)
@@ -359,6 +358,11 @@ in {
 
   programs.rclone = {
     enable = true;
+  };
+
+  programs.zed-editor = {
+    enable = true;
+    extraPackages = with pkgs; [ nil nixd ];
   };
 
   services.blueman-applet.enable = true;
