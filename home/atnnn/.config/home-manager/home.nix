@@ -266,8 +266,6 @@ in {
     (on-demand pkgs.ffmpeg)
     (on-demand pkgs.bc)
     pkgs.coreutils-full
-    (on-demand pkgs.radicle-node)
-    (on-demand pkgs.radicle-tui)
     (on-demand pkgs.jjui)
     (on-demand pkgs.zed-editor)
     (on-demand pkgs.cabal-install)

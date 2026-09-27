@@ -5,6 +5,6 @@
 [remote "origin"]
 	url = git@github.com:atnnn/home
 	fetch = +refs/heads/*:refs/remotes/origin/*
-[branch "puck"]
+[branch "limbo"]
         remote = origin
-        merge = refs/heads/puck
+        merge = refs/heads/limbo
