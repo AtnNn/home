@@ -354,6 +354,7 @@ in {
       epkg.flycheck-projectile
       epkg.helm-company
     ])) ["emacs" "emacsclient"])
+    pkgs.joplin-desktop
   ];
 
   programs.rclone = {
