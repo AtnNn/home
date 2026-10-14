@@ -3,6 +3,7 @@ mesh:
   pkgs,
   lib,
   config,
+  modulesPath,
   ...
 }:
 
@@ -16,8 +17,12 @@ let
     longitude = -111.8;
   };
 
+  nixpkgsRoot = "${modulesPath}/../..";
+  bootstrapPkgs = import nixpkgsRoot { config = {}; overlays = []; };
+
 in
 {
+
   options.atnnn-mesh = {
     host = mkOption {
       type = types.anything;
@@ -27,6 +32,7 @@ in
   };
 
   imports = [
+    (import "${bootstrapPkgs.home-manager.src}/nixos")
     mesh.modules.nebula
     mesh.modules.garage
   ];
@@ -69,7 +75,7 @@ in
 
       users.users.clanker = {
         isNormalUser = true;
-        hashedPasswod = "!";
+        hashedPassword = "!";
         openssh.authorizedKeys.keys = [ ];
         shell = pkgs.bashInteractive;
         extraGroups = [ ];
