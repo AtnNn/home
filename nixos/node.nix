@@ -1,15 +1,23 @@
-mesh: { pkgs, lib, config, ... }:
+mesh:
+{
+  pkgs,
+  lib,
+  config,
+  ...
+}:
 
-with lib; let
+with lib;
+let
 
-host = config.atnnn-mesh.host;
+  host = config.atnnn-mesh.host;
 
-mesa_AZ = {
-  latitude = 33.4;
-  longitude = -111.8;
-};
+  mesa_AZ = {
+    latitude = 33.4;
+    longitude = -111.8;
+  };
 
-in {
+in
+{
   options.atnnn-mesh = {
     host = mkOption {
       type = types.anything;
@@ -23,231 +31,301 @@ in {
     mesh.modules.garage
   ];
 
-  config = mkIf (host != null) (mkMerge [{
+  config = mkIf (host != null) (mkMerge [
+    {
 
-    nixpkgs = {
-      pkgs = mesh.pkgs;
-    };
-
-    networking = {
-      hostName = host.name;
-      firewall = {
-        enable = true;
-        allowedTCPPorts = [ 22 mesh.shared.garage_rpc_port ];
-        allowPing = true;
+      nixpkgs = {
+        pkgs = mesh.pkgs;
       };
-      extraHosts = lib.concatLines (map (host: "${host.ip} ${host.name}") (attrValues mesh.nodes.hosts));
-    };
 
-    system.copySystemConfiguration = true;
-
-    i18n.defaultLocale = "en_US.UTF-8";
-
-    time.timeZone = "America/Phoenix";
-
-    users.users.atnnn = {
-      isNormalUser = true;
-      extraGroups = [ "wheel" "networkmanager" "audio" "docker" ];
-    };
-
-    environment.systemPackages = with pkgs; [
-      vim
-      wget
-      smartmontools
-      coreutils
-      util-linux
-      screen
-      ncdu
-      file
-      sudo
-      which
-      nebula
-      htop
-      magic-wormhole-rs
-    ];
-
-    programs.mtr.enable = true;
-
-    programs.gnupg.agent = {
-      enable = true;
-      enableSSHSupport = true;
-    };
-
-    services.openssh.enable = true;
-
-    services.fail2ban.enable = true;
-
-    services.smartd = {
-      enable = true;
-      notifications.test = true;
-      notifications.mail = {
-        recipient = "etienne@atnnn.com";
-        enable = true;
+      networking = {
+        hostName = host.name;
+        firewall = {
+          enable = true;
+          allowedTCPPorts = [
+            22
+            mesh.shared.garage_rpc_port
+          ];
+          allowPing = true;
+        };
+        extraHosts = lib.concatLines (map (host: "${host.ip} ${host.name}") (attrValues mesh.nodes.hosts));
       };
-    };
 
-    nix = {
-      nixPath = [
-        "nixpkgs=${mesh.nixpkgs}"
-      ];
-      channel.enable = false;
-      gc = {
-        automatic = true;
-        dates = "weekly";
-        options = "--delete-older-than 30d";
-      };
-      settings = {
-        auto-optimise-store = true;
-        trusted-substituters = [
-          "https://lean4.cachix.org/"
+      system.copySystemConfiguration = true;
+
+      i18n.defaultLocale = "en_US.UTF-8";
+
+      time.timeZone = "America/Phoenix";
+
+      users.users.atnnn = {
+        isNormalUser = true;
+        extraGroups = [
+          "wheel"
+          "networkmanager"
+          "audio"
+          "docker"
         ];
       };
-      extraOptions = ''
-        experimental-features = nix-command flakes recursive-nix
-      '';
-    };
 
-    services.journalwatch = {
-      enable = true;
-      mailTo = "etienne@atnnn.com";
-      priority = 4; # warning
-      filterBlocks = [{
-        match = "SYSLOG_IDENTIFIER = sshd";
-        filters = ''
-          fatal: Timeout before authentication for [^ ]+ port \d+
-          error: PAM: Authentication failure .*
-          error: kex_exchange_identification: .*
-          pam_unix(sshd:auth): check pass; user unknown
-          pam_unix(sshd:auth): authentication failure; .*
-          error: kex protocol error: .*
-          error: Protocol major versions differ: 2 vs. 1
-          error: kex_exchange_identification: read: Connection reset by peer
-        '';
-      } {
-        match = "SYSLOG_IDENTIFIER = dhcpcd";
-        filters = ''
-          eth0: failed to renew DHCP, rebinding
-        '';
-      } {
-        match = "SYSLOG_IDENTIFIER = fail2ban";
-        filters = ''
-          NOTICE [sshd] (Ban|Unban) [^ ]+
-          WARNING [sshd] Detected a log entry 7h after the current time in operation mode.*
-          WARNING [sshd] Please check a jail for a timing issue.*
-        '';
-      } {
-        match = "SYSLOG_IDENTIFIER = docker";
-        filters = ''
-	  Session done
-        '';
-      }];
-    };
-
-    services.postfix = {
-      enable = true;
-      virtual = "@${host.name}.atnnn.com etienne@atnnn.com";
-      settings.main = {
-        mydomain = "${host.name}.atnnn.com";
-        myhostname = "${host.name}.atnnn.com";
+      users.users.clanker = {
+        isNormalUser = true;
+        hashedPasswod = "!";
+        openssh.authorizedKeys.keys = [ ];
+        shell = pkgs.bashInteractive;
+        extraGroups = [ ];
+        packages = with pkgs; [
+          python3
+          nodejs
+        ];
       };
-    };
 
-    services.nebula.networks.atnnn.enable = true;
-
-  } (mkIf host.profiles.linuxWorkstation {
-
-    services.redshift.enable = true;
-
-    boot.loader.grub = {
-      enable = true;
-      useOSProber = true;
-    };
-
-    networking.networkmanager.enable = true;
-
-    services.greetd = {
-      enable = true;
-      settings = {
-        default_session = {
-          command = "${pkgs.tuigreet}/bin/tuigreet --time --remember --cmd /run/current-system/sw/bin/sway";
-          user = "greeter";
+      home-manager.users.clanker = { pkgs, lib, ... }: {
+        home = {
+          stateVersion = "26.05";
+          packages = with pkgs; [
+            python3
+            nodejs
+          ];
+          file.".npmrc".text = ''
+            prefix=''${HOME}/.npm-global
+          '';
+          sessionPath = [
+            "$HOME/.npm-global/bin"
+            "$HOME/.venv/bin"
+          ];
+          activation.setupPythonVenv = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+            if [ ! -d "$HOME/.venv" ]; then
+              $DRY_RUN_CMD ${pkgs.python3}/bin/python3 -m venv "$HOME/.venv"
+            fi
+          '';
         };
-        terminal = { vt = lib.mkForce 7; };
+        programs.bash = {
+          enable = true;
+          initExtra = ''
+            if [ -f "$HOME/.venv/bin/activate" ]; then
+              source "$HOME/.venv/bin/activate"
+            fi
+          '';
+        };
       };
-    };
 
-    programs.sway = {
-      enable = true;
-      # extraPackages = with pkgs; [];
-      # extraSessionCommands = '' '';
-    };
-
-    hardware.bluetooth.enable = true;
-
-  }) (mkIf host.profiles.workstation {
-
-    location = mesa_AZ;
-
-    hardware.graphics.enable = true;
-
-    services.pipewire = {
-      enable = true;
-      pulse.enable = true;
-      alsa.enable = true;
-    };
-
-    services.printing = {
-      enable = true;
-      drivers = [ pkgs.hplip ];
-    };
-
-    services.avahi = {
-      enable = true;
-      nssmdns6 = true;
-    };
-
-  }) (mkIf host.profiles.laptop {
-
-    powerManagement = {
-      enable = true;
-      cpuFreqGovernor = "ondemand";
-      powertop.enable = true;
-    };
-
-    services.logind.settings.Login = {
-      HandleLidSwitch = "hybrid-sleep";
-      HandleLidSwitchDocked = "ignore";
-      HandleLidSwitchExternalPower = "ignore";
-    };
-
-    services.upower = {
-      enable = true;
-      criticalPowerAction = "HybridSleep";
-    };
-
-    environment.systemPackages = with pkgs; [
-      powertop
-      acpi
-    ];
-
-    services.auto-cpufreq.enable = true;
-
-  }) (mkIf host.profiles.extras {
-
-    virtualisation.docker.enable = true;
-
-    fonts = {
-      enableDefaultPackages = true;
-      fontDir.enable = true;
-      packages = with pkgs; [
-        dejavu_fonts freefont_ttf unifont unifont_upper
-        font-awesome noto-fonts noto-fonts-color-emoji
+      environment.systemPackages = with pkgs; [
+        vim
+        wget
+        smartmontools
+        coreutils
+        util-linux
+        screen
+        ncdu
+        file
+        sudo
+        which
+        nebula
+        htop
+        magic-wormhole-rs
       ];
-    };
 
-    environment.systemPackages = with pkgs; [
-      man man-pages stdmanpages
-    ];
+      programs.mtr.enable = true;
 
-  })]);
+      programs.gnupg.agent = {
+        enable = true;
+        enableSSHSupport = true;
+      };
+
+      services.openssh.enable = true;
+
+      services.fail2ban.enable = true;
+
+      services.smartd = {
+        enable = true;
+        notifications.test = true;
+        notifications.mail = {
+          recipient = "etienne@atnnn.com";
+          enable = true;
+        };
+      };
+
+      nix = {
+        nixPath = [
+          "nixpkgs=${mesh.nixpkgs}"
+        ];
+        channel.enable = false;
+        gc = {
+          automatic = true;
+          dates = "weekly";
+          options = "--delete-older-than 30d";
+        };
+        settings = {
+          auto-optimise-store = true;
+          trusted-substituters = [
+            "https://lean4.cachix.org/"
+          ];
+        };
+        extraOptions = ''
+          experimental-features = nix-command flakes recursive-nix
+        '';
+      };
+
+      services.journalwatch = {
+        enable = true;
+        mailTo = "etienne@atnnn.com";
+        priority = 4; # warning
+        filterBlocks = [
+          {
+            match = "SYSLOG_IDENTIFIER = sshd";
+            filters = ''
+              fatal: Timeout before authentication for [^ ]+ port \d+
+              error: PAM: Authentication failure .*
+              error: kex_exchange_identification: .*
+              pam_unix(sshd:auth): check pass; user unknown
+              pam_unix(sshd:auth): authentication failure; .*
+              error: kex protocol error: .*
+              error: Protocol major versions differ: 2 vs. 1
+              error: kex_exchange_identification: read: Connection reset by peer
+            '';
+          }
+          {
+            match = "SYSLOG_IDENTIFIER = dhcpcd";
+            filters = ''
+              eth0: failed to renew DHCP, rebinding
+            '';
+          }
+          {
+            match = "SYSLOG_IDENTIFIER = fail2ban";
+            filters = ''
+              NOTICE [sshd] (Ban|Unban) [^ ]+
+              WARNING [sshd] Detected a log entry 7h after the current time in operation mode.*
+              WARNING [sshd] Please check a jail for a timing issue.*
+            '';
+          }
+          {
+            match = "SYSLOG_IDENTIFIER = docker";
+            filters = ''
+              	  Session done
+            '';
+          }
+        ];
+      };
+
+      services.postfix = {
+        enable = true;
+        virtual = "@${host.name}.atnnn.com etienne@atnnn.com";
+        settings.main = {
+          mydomain = "${host.name}.atnnn.com";
+          myhostname = "${host.name}.atnnn.com";
+        };
+      };
+
+      services.nebula.networks.atnnn.enable = true;
+
+    }
+    (mkIf host.profiles.linuxWorkstation {
+
+      services.redshift.enable = true;
+
+      boot.loader.grub = {
+        enable = true;
+        useOSProber = true;
+      };
+
+      networking.networkmanager.enable = true;
+
+      services.greetd = {
+        enable = true;
+        settings = {
+          default_session = {
+            command = "${pkgs.tuigreet}/bin/tuigreet --time --remember --cmd /run/current-system/sw/bin/sway";
+            user = "greeter";
+          };
+          terminal = {
+            vt = lib.mkForce 7;
+          };
+        };
+      };
+
+      programs.sway = {
+        enable = true;
+        # extraPackages = with pkgs; [];
+        # extraSessionCommands = '' '';
+      };
+
+      hardware.bluetooth.enable = true;
+
+    })
+    (mkIf host.profiles.workstation {
+
+      location = mesa_AZ;
+
+      hardware.graphics.enable = true;
+
+      services.pipewire = {
+        enable = true;
+        pulse.enable = true;
+        alsa.enable = true;
+      };
+
+      services.printing = {
+        enable = true;
+        drivers = [ pkgs.hplip ];
+      };
+
+      services.avahi = {
+        enable = true;
+        nssmdns6 = true;
+      };
+
+    })
+    (mkIf host.profiles.laptop {
+
+      powerManagement = {
+        enable = true;
+        cpuFreqGovernor = "ondemand";
+        powertop.enable = true;
+      };
+
+      services.logind.settings.Login = {
+        HandleLidSwitch = "hybrid-sleep";
+        HandleLidSwitchDocked = "ignore";
+        HandleLidSwitchExternalPower = "ignore";
+      };
+
+      services.upower = {
+        enable = true;
+        criticalPowerAction = "HybridSleep";
+      };
+
+      environment.systemPackages = with pkgs; [
+        powertop
+        acpi
+      ];
+
+      services.auto-cpufreq.enable = true;
+
+    })
+    (mkIf host.profiles.extras {
+
+      virtualisation.docker.enable = true;
+
+      fonts = {
+        enableDefaultPackages = true;
+        fontDir.enable = true;
+        packages = with pkgs; [
+          dejavu_fonts
+          freefont_ttf
+          unifont
+          unifont_upper
+          font-awesome
+          noto-fonts
+          noto-fonts-color-emoji
+        ];
+      };
+
+      environment.systemPackages = with pkgs; [
+        man
+        man-pages
+        stdmanpages
+      ];
+
+    })
+  ]);
 }
