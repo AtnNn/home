@@ -36,6 +36,7 @@ nodes = {
     thanos = 4;
     piezzophone = 5;
     puck = 6;
+    limbo = 7;
   };
 
   lighthouses = map (host: host.ip) (filter (host: host.lighthouse) (attrValues nodes.hosts));
