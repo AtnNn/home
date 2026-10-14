@@ -1,4 +1,4 @@
-{ ... }: let
+{ lib, ... }: let
 
   mesh = import ../..;
 
@@ -19,7 +19,11 @@ in {
     wlp2s0.useDHCP = true;
   };
 
-  boot.loader.grub.enable = false;
+  boot.loader.grub.enable = lib.mkForce false;
 
   boot.loader.systemd-boot.enable = true;
+
+  services.nebula.networks.atnnn.enable = lib.mkForce false;
+
+  services.garage.enable = lib.mkForce false;
 }

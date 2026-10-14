@@ -18,7 +18,10 @@ let
   };
 
   nixpkgsRoot = "${modulesPath}/../..";
-  bootstrapPkgs = import nixpkgsRoot { config = {}; overlays = []; };
+  bootstrapPkgs = import nixpkgsRoot {
+    config = { };
+    overlays = [ ];
+  };
 
 in
 {
@@ -43,6 +46,19 @@ in
       nixpkgs = {
         pkgs = mesh.pkgs;
       };
+
+      programs.nix-ld.enable = true;
+
+      programs.nix-ld.libraries = with pkgs; [
+        stdenv.cc.cc
+        zlib
+        fuse3
+        icu
+        nss
+        openssl
+        curl
+        expat
+      ];
 
       networking = {
         hostName = host.name;
@@ -96,6 +112,7 @@ in
             prefix=''${HOME}/.npm-global
           '';
           sessionPath = [
+            "$HOME/.local/bin"
             "$HOME/.npm-global/bin"
             "$HOME/.venv/bin"
           ];
